@@ -1,0 +1,30 @@
+:root {
+	--color-primary: var(--primary-40);
+	--color-on-primary: var(--primary-100);
+	--color-primary-container: var(--primary-90);
+	--color-on-primary-container: var(--primary-10);
+
+	--color-secondary: var(--secondary-40);
+	--color-on-secondary: var(--secondary-100);
+	--color-secondary-container: var(--secondary-90);
+	--color-on-secondary-container: var(--secondary-10);
+
+	--color-tertiary: var(--tertiary-40);
+	--color-on-tertiary: var(--tertiary-100);
+	--color-tertiary-container: var(--tertiary-90);
+	--color-on-tertiary-container: var(--tertiary-10);
+
+	--color-error: var(--error-40);
+	--color-on-error: var(--error-100);
+	--color-error-container: var(--error-90);
+	--color-on-error-container: var(--error-10);
+
+	--color-background: var(--neutral-98);
+	--color-on-background: var(--neutral-10);
+	--color-surface: var(--neutral-98);
+	--color-on-surface: var(--neutral-10);
+
+	--color-outline: var(--neutral-variant-50);
+	--color-surface-variant: var(--neutral-variant-80);
+	--color-on-surface-variant: var(--neutral-variant-30);
+}

@@ -1,0 +1,141 @@
+:root {
+	// Typography:
+	--fonts-body: 'Synonym', sans-serif;
+	--fonts-headings: 'Cabinet Grotesk', sans-serif;
+
+	// Spacing:
+	--space-1: 4px;
+	--space-2: 8px;
+	--space-3: 12px;
+	--space-4: 16px;
+	--space-5: 20px;
+	--space-6: 24px;
+	--space-7: 28px;
+	--space-8: 32px;
+	--space-9: 36px;
+	--space-10: 40px;
+
+	// Corner radii:
+	--radii-1: 4px;
+	--radii-2: 8px;
+	--radii-3: 12px;
+	--radii-4: 16px;
+	--radii-round: 9999px;
+
+	// Colors:
+	// (custom source color: #0059ff)
+	--primary-0: hsl(0, 0%, 0%);
+	--primary-10: hsl(223, 100%, 15%);
+	--primary-20: hsl(221, 100%, 25%);
+	--primary-25: hsl(220, 100%, 29%);
+	--primary-30: hsl(219, 100%, 30%);
+	--primary-35: hsl(220, 100%, 40%);
+	--primary-40: hsl(219, 100%, 45%);
+	--primary-50: hsl(224, 100%, 60%);
+	--primary-60: hsl(226, 100%, 70%);
+	--primary-70: hsl(227, 100%, 78%);
+	--primary-80: hsl(228, 100%, 86%);
+	--primary-90: hsl(231, 100%, 93%);
+	--primary-95: hsl(236, 100%, 97%);
+	--primary-98: hsl(257, 100%, 99%);
+	--primary-99: hsl(285, 100%, 99%);
+	--primary-100: hsl(0, 0%, 100%);
+
+	--secondary-0: hsl(0, 0%, 0%);
+	--secondary-10: hsl(226, 33%, 13%);
+	--secondary-20: hsl(227, 21%, 21%);
+	--secondary-25: hsl(227, 18%, 26%);
+	--secondary-30: hsl(227, 13%, 35%);
+	--secondary-35: hsl(227, 13%, 35%);
+	--secondary-40: hsl(230, 12%, 40%);
+	--secondary-50: hsl(230, 10%, 50%);
+	--secondary-60: hsl(231, 13%, 60%);
+	--secondary-70: hsl(231, 18%, 70%);
+	--secondary-80: hsl(233, 28%, 81%);
+	--secondary-90: hsl(233, 69%, 92%);
+	--secondary-95: hsl(236, 100%, 97%);
+	--secondary-98: hsl(257, 100%, 99%);
+	--secondary-99: hsl(285, 100%, 99%);
+	--secondary-100: hsl(0, 0%, 100%);
+
+	--tertiary-0: hsl(0, 0%, 0%);
+	--tertiary-10: hsl(305, 42%, 12%);
+	--tertiary-20: hsl(306, 26%, 21%);
+	--tertiary-25: hsl(308, 22%, 25%);
+	--tertiary-30: hsl(308, 20%, 30%);
+	--tertiary-35: hsl(309, 18%, 35%);
+	--tertiary-40: hsl(311, 16%, 39%);
+	--tertiary-50: hsl(310, 14%, 49%);
+	--tertiary-60: hsl(311, 18%, 59%);
+	--tertiary-70: hsl(313, 25%, 70%);
+	--tertiary-80: hsl(313, 42%, 81%);
+	--tertiary-90: hsl(314, 100%, 92%);
+	--tertiary-95: hsl(321, 100%, 96%);
+	--tertiary-98: hsl(345, 100%, 98%);
+	--tertiary-99: hsl(300, 100%, 99%);
+	--tertiary-100: hsl(0, 0%, 100%);
+
+	--error-0: hsl(0, 0%, 0%);
+	--error-10: hsl(358, 100%, 13%);
+	--error-20: hsl(357, 100%, 21%);
+	--error-25: hsl(357, 100%, 25%);
+	--error-30: hsl(356, 100%, 29%);
+	--error-35: hsl(357, 92%, 34%);
+	--error-40: hsl(0, 75%, 42%);
+	--error-50: hsl(2, 73%, 53%);
+	--error-60: hsl(4, 100%, 64%);
+	--error-70: hsl(6, 100%, 75%);
+	--error-80: hsl(6, 100%, 84%);
+	--error-90: hsl(6, 100%, 92%);
+	--error-95: hsl(9, 100%, 96%);
+	--error-98: hsl(7, 100%, 98%);
+	--error-99: hsl(300, 100%, 99%);
+	--error-100: hsl(0, 0%, 100%);
+
+	--neutral-0: hsl(0, 0%, 0%);
+	--neutral-10: hsl(240, 7%, 11%);
+	--neutral-20: hsl(240, 4%, 20%);
+	--neutral-25: hsl(240, 3%, 24%);
+	--neutral-30: hsl(255, 3%, 28%);
+	--neutral-35: hsl(240, 2%, 33%);
+	--neutral-40: hsl(240, 2%, 38%);
+	--neutral-50: hsl(255, 2%, 47%);
+	--neutral-60: hsl(255, 2%, 57%);
+	--neutral-70: hsl(264, 3%, 68%);
+	--neutral-80: hsl(270, 4%, 78%);
+	--neutral-90: hsl(276, 9%, 89%);
+	--neutral-95: hsl(270, 15%, 95%);
+	--neutral-98: hsl(276, 56%, 98%);
+	--neutral-99: hsl(285, 100%, 99%);
+	--neutral-100: hsl(0, 0%, 100%);
+
+	--neutral-variant-0: hsl(0, 0%, 0%);
+	--neutral-variant-10: hsl(233, 15%, 12%);
+	--neutral-variant-20: hsl(233, 9%, 20%);
+	--neutral-variant-25: hsl(233, 7%, 25%);
+	--neutral-variant-30: hsl(234, 7%, 29%);
+	--neutral-variant-35: hsl(234, 6%, 34%);
+	--neutral-variant-40: hsl(234, 5%, 38%);
+	--neutral-variant-50: hsl(240, 4%, 48%);
+	--neutral-variant-60: hsl(240, 5%, 58%);
+	--neutral-variant-70: hsl(240, 6%, 69%);
+	--neutral-variant-80: hsl(240, 10%, 80%);
+	--neutral-variant-90: hsl(245, 22%, 90%);
+	--neutral-variant-95: hsl(240, 50%, 96%);
+	--neutral-variant-98: hsl(257, 100%, 99%);
+	--neutral-variant-99: hsl(285, 100%, 99%);
+	--neutral-variant-100: hsl(0, 0%, 100%);
+
+	// Shadows:
+
+	--elevation-1: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px,
+		rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
+	--elevation-2: rgba(0, 0, 0, 0.2) 0px 3px 3px -2px, rgba(0, 0, 0, 0.14) 0px 3px 4px 0px,
+		rgba(0, 0, 0, 0.12) 0px 1px 8px 0px;
+	--elevation-3: rgba(0, 0, 0, 0.2) 0px 3px 5px -1px, rgba(0, 0, 0, 0.14) 0px 6px 10px 0px,
+		rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
+	--elevation-4: rgba(0, 0, 0, 0.2) 0px 5px 5px -3px, rgba(0, 0, 0, 0.14) 0px 8px 10px 1px,
+		rgba(0, 0, 0, 0.12) 0px 3px 14px 2px;
+	--elevation-5: rgba(0, 0, 0, 0.2) 0px 7px 8px -4px, rgba(0, 0, 0, 0.14) 0px 12px 17px 2px,
+		rgba(0, 0, 0, 0.12) 0px 5px 22px 4px;
+}
