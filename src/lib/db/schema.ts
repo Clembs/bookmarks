@@ -25,7 +25,7 @@ export const sessions = pgTable('sessions', {
 		.default(sql`gen_random_uuid()`),
 	userId: text('user_id')
 		.notNull()
-		.references(() => users.id),
+		.references(() => users.id, { onDelete: 'cascade' }),
 	expiresAt: timestamp('expires_at').notNull()
 });
 
@@ -66,9 +66,12 @@ export const bookmarks = pgTable('bookmarks', {
 		.notNull()
 		.references(() => users.id),
 	categoryId: text('category_id').references(() => categories.id),
-	url: text('url').notNull(),
+	type: text('type', {
+		enum: ['file', 'url', 'text', 'color', 'image', 'youtube', 'code', 'contact', 'event']
+	}).notNull(),
 	title: text('title').notNull(),
-	iconUrl: text('icon_url').notNull(),
+	value: text('value').notNull(),
+	iconUrl: text('icon_url'),
 	createdAt: timestamp('created_at').notNull().defaultNow(),
 	updatedAt: timestamp('updated_at').notNull().defaultNow()
 });
