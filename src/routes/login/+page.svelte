@@ -1,17 +1,15 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import TextInput from '$lib/components/TextInput.svelte';
+	import Button from '$lib/components/Button.svelte';
 </script>
 
-<form method="post" use:enhance>
-	<label for="email">
-		Email
-		<input type="email" name="email" />
-	</label>
-	<label for="password">
-		Password
-		<input type="password" name="password" />
-	</label>
-	<button type="submit">Log in</button>
+<h1>Login</h1>
+
+<form method="post" use:enhance class="flex col">
+	<TextInput label="Email" type="email" name="email" required />
+	<TextInput label="Password" type="password" name="password" required />
+	<Button type="submit">Log in</Button>
 </form>
 
 <a href="/register">Register a new account</a>
