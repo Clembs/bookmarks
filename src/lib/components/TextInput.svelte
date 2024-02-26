@@ -95,7 +95,12 @@
 			color: var(--color-on-surface-variant);
 			background: var(--color-surface);
 			padding: 0 0.25rem;
-			transition: all 0.2s;
+			transition:
+				transform 0.2s,
+				left 0.2s,
+				top 0.2s,
+				font-size 0.2s;
+			will-change: transform, left, top, font-size;
 		}
 
 		input,
