@@ -1,34 +1,34 @@
 <script lang="ts">
-	import type { BookmarkType } from '$lib/db/types';
+	import type { Bookmark } from '$lib/helpers/bookmark.svelte';
 	import { trimUrl } from '$lib/helpers/trimUrl';
 
 	let { bookmark, active, oncontextmenu } = $props<{
-		bookmark: BookmarkType;
+		bookmark: Bookmark;
 		active?: boolean;
 		oncontextmenu?: (ev: MouseEvent) => void;
 	}>();
 </script>
 
-{#if bookmark.partial}
+{#if bookmark.raw.partial}
 	<article class="bookmark" class:active {oncontextmenu}>
 		<div class="bookmark-title">
-			{bookmark.value}
+			{bookmark.raw.value}
 		</div>
 	</article>
-{:else if bookmark.type === 'url'}
+{:else if bookmark.raw.type === 'url'}
 	<a
 		class="bookmark"
 		class:active
 		{oncontextmenu}
-		href={bookmark.value}
+		href={bookmark.raw.value}
 		target="_blank"
 		rel="noopener noreferrer"
 	>
-		{#if bookmark.iconUrl}
+		{#if bookmark.raw.iconUrl}
 			<img
 				class="bookmark-icon"
-				src={bookmark.iconUrl}
-				alt={bookmark.title}
+				src={bookmark.raw.iconUrl}
+				alt={bookmark.raw.title}
 				height="24"
 				width="24"
 			/>
@@ -37,15 +37,18 @@
 				class="bookmark-icon fallback"
 				style:--color="#{Math.floor(Math.random() * 16777215).toString(16)}"
 			>
-				{bookmark.title[0]}
+				{bookmark.raw.title[0]}
 			</div>
 		{/if}
 		<div class="bookmark-info">
 			<div class="bookmark-info-title">
-				{bookmark.title}
+				{bookmark.raw.title}
+				{#if bookmark.deleteState === 'loading'}
+					- loading
+				{/if}
 			</div>
 			<div class="bookmark-info-subtext">
-				{trimUrl(bookmark.value)}
+				{trimUrl(bookmark.raw.value)}
 			</div>
 		</div>
 	</a>

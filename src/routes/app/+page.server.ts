@@ -2,7 +2,7 @@ import { db } from '$lib/db';
 import { bookmarks } from '$lib/db/schema';
 import { fail } from '@sveltejs/kit';
 import { decode } from 'html-entities';
-import type { BookmarkType } from '$lib/db/types';
+import type { RawBookmark } from '$lib/db/types';
 import { URL_REGEX } from '$lib/validation';
 
 export const actions = {
@@ -19,7 +19,7 @@ export const actions = {
 			});
 		}
 
-		let newBookmark: BookmarkType | undefined;
+		let newBookmark: RawBookmark | undefined;
 
 		if (URL_REGEX.test(raw)) {
 			if (!raw.startsWith('http')) {

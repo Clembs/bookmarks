@@ -1,6 +1,6 @@
 import { bookmarks, categories } from '$lib/db/schema';
 
-export type BookmarkType<TPartial = true | undefined> = TPartial extends undefined
+export type RawBookmark<TPartial = true | undefined> = TPartial extends undefined
 	? typeof bookmarks.$inferSelect & {
 			partial?: TPartial;
 		}
@@ -8,6 +8,6 @@ export type BookmarkType<TPartial = true | undefined> = TPartial extends undefin
 			partial: TPartial;
 		};
 
-export type CategoryType = typeof categories.$inferSelect & {
-	bookmarks: BookmarkType[];
+export type RawCategory = typeof categories.$inferSelect & {
+	bookmarks: RawBookmark[];
 };

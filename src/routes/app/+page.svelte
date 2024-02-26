@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Bookmark from '$lib/components/Bookmark.svelte';
+	import BookmarkComponent from '$lib/components/Bookmark.svelte';
 	import ContextMenu from '$lib/components/ContextMenu.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
-	import type { BookmarkType } from '$lib/db/types';
-	import { Delete, Edit, Open_in_new } from 'svelte-google-materialdesign-icons';
+	import { getBookmarkContextMenuItems } from './helpers';
+	import { handleKeyboardShortcut } from '$lib/helpers/keyboard/handler';
+	import { getBookmarkKbdActions } from '$lib/helpers/keyboard/bookmark';
+	import { Bookmark } from '$lib/helpers/bookmark.svelte';
+	import type { RawBookmark } from '$lib/db/types';
 
 	let value = $state('');
 	let error = $state('');
@@ -12,12 +15,12 @@
 	let textInput = $state<HTMLInputElement | HTMLTextAreaElement | undefined>();
 	let form = $state<HTMLFormElement | undefined>();
 
-	let currentBookmark = $state<BookmarkType | undefined>();
+	let currentBookmark = $state<Bookmark | undefined>();
 	let contextMenuVisible = $state(false);
 	let x = $state(0);
 	let y = $state(0);
 
-	function showContextMenu(ev: MouseEvent, bookmark: BookmarkType) {
+	function showContextMenu(ev: MouseEvent, bookmark: Bookmark) {
 		ev.preventDefault();
 		x = ev.clientX;
 		y = ev.clientY;
@@ -26,6 +29,8 @@
 	}
 
 	const { data } = $props();
+
+	let bookmarks = $derived(data.bookmarks.map((b) => new Bookmark(b)));
 </script>
 
 <svelte:window
@@ -43,6 +48,9 @@
 			textInput?.focus();
 			form?.submit();
 		}
+		if (currentBookmark) {
+			handleKeyboardShortcut(ev, getBookmarkKbdActions(currentBookmark));
+		}
 	}}
 />
 
@@ -51,33 +59,8 @@
 		bind:visible={contextMenuVisible}
 		{x}
 		{y}
-		items={[
-			{
-				label: 'Open',
-				action: currentBookmark.value!,
-				icon: Open_in_new,
-				shortcut: "Enter",
-			},
-			{
-				label: 'Rename',
-				action() {
-					console.log('Edit');
-				},
-				icon: Edit,
-				shortcut: "F2",
-			},
-			{
-				label: 'Delete',
-				action() {
-					console.log('Delete');
-				},
-				icon: Delete,
-				shortcut: "Del"
-			}
-		]}
-		onclose={() => {
-			currentBookmark = undefined;
-		}}
+		items={getBookmarkContextMenuItems(currentBookmark)}
+		onclose={() => (currentBookmark = undefined)}
 	/>
 {/if}
 
@@ -88,10 +71,11 @@
 	bind:this={form}
 	use:enhance={() => {
 		isLoading = true;
-		data.bookmarks.push({
+		bookmarks.push(new Bookmark({
 			value,
 			partial: true,
-		});
+		}));
+
 		return async ({ result, update }) => {
 			isLoading = false;
 			if (result.type === "failure" && result.data?.message) {
@@ -100,8 +84,8 @@
 			
 			if (result.type === "success" && result.data?.bookmark) {
 				console.log(result.data);
-				data.bookmarks.pop();
-				data.bookmarks.push(result.data.bookmark as BookmarkType);
+				bookmarks.pop();
+				bookmarks.push(new Bookmark(result.data.bookmark as RawBookmark));
 			}
 			return await update();
 		}
@@ -118,11 +102,11 @@
 </form>
 
 <ul>
-	{#each data.bookmarks as bookmark}
-		<Bookmark
-			active={currentBookmark && currentBookmark.id === bookmark.id}
+	{#each bookmarks as bookmark}
+		<BookmarkComponent
+			active={currentBookmark && currentBookmark.raw.id === bookmark.raw.id}
 			{bookmark}
-			oncontextmenu={(ev) => typeof bookmark !== 'string' && showContextMenu(ev, bookmark)}
+			oncontextmenu={(ev) => showContextMenu(ev, bookmark)}
 		/>
 	{/each}
 </ul>

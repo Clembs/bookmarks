@@ -1,8 +1,7 @@
 import { db } from '$lib/db';
-import type { BookmarkType, CategoryType } from '$lib/db/types';
 import { redirect } from '@sveltejs/kit';
 
-export async function load({ locals: { getSession } }) {
+export async function load({ locals: { getSession }, depends }) {
 	const session = await getSession();
 	if (!session) throw redirect(302, '/login');
 
@@ -14,11 +13,10 @@ export async function load({ locals: { getSession } }) {
 		}
 	});
 
+	depends('bookmarks');
+
 	return {
 		bookmarks: userData.bookmarks,
 		categories: userData.categories
-	} as {
-		bookmarks: BookmarkType[];
-		categories: CategoryType[];
 	};
 }
