@@ -3,6 +3,11 @@ import { sessions, users } from '$lib/db/schema';
 import { fail, redirect } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
 
+export const load = async ({ locals: { getSession } }) => {
+	const session = await getSession();
+	if (session) throw redirect(302, '/app');
+};
+
 export const actions = {
 	async default({ cookies, request }) {
 		const data = await request.formData();
