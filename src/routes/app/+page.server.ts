@@ -1,23 +1,9 @@
 import { db } from '$lib/db';
 import { bookmarks } from '$lib/db/schema';
-import { fail, redirect } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import { decode } from 'html-entities';
-import type { PageServerLoad } from './$types';
 import type { BookmarkType } from '$lib/db/types';
 import { URL_REGEX } from '$lib/validation';
-
-export const load: PageServerLoad = async ({ locals: { getSession } }) => {
-	const session = await getSession();
-	if (!session) throw redirect(302, '/login');
-
-	const bookmarks = await db.query.bookmarks.findMany({
-		where: ({ userId }, { eq }) => eq(userId, session.userId)
-	});
-
-	return {
-		bookmarks
-	} as { bookmarks: BookmarkType[] };
-};
 
 export const actions = {
 	async default({ request, fetch, locals }) {
