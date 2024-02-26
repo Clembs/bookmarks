@@ -1,9 +1,7 @@
-import { db } from '$lib/db';
-import { bookmarks } from '$lib/db/schema';
 import { fail } from '@sveltejs/kit';
-import { decode } from 'html-entities';
 import type { RawBookmark } from '$lib/db/types';
 import { URL_REGEX } from '$lib/validation';
+import { createTextBookmark, createUrlBookmark } from '$lib/helpers/create-bookmark';
 
 export const actions = {
 	async default({ request, fetch, locals }) {
@@ -26,41 +24,10 @@ export const actions = {
 				raw = `https://${raw}`;
 			}
 
-			const site = await fetch(raw, {
-				headers: {
-					'User-Agent': 'BookmarksBot/1.0 (+https://clembs.com)'
-				}
-			});
-
-			if (!site.ok) {
-				return fail(404);
-			}
-
-			const html = await site.text();
-
-			// eslint-disable-next-line no-irregular-whitespace
-			let iconUrl = html.match(
-				/<link\s+(?:type="[^"]+"\s*)?(?:rel="(?:shortcut\s+)?icon"\s*)?(?:type="[^"]+"\s*)?href="([^"]+)"(?:type="[^"]+"\s*)?(?:\s*rel="(?:shortcuts+)?icon"\s*)?(?:type="[^"]+"\s*)?\s*\/?>/
-			)?.[1];
-
-			if (iconUrl && !iconUrl.startsWith('http')) {
-				iconUrl = new URL(iconUrl, raw).toString();
-			}
-
-			const siteTitle = html.match(/<title>([^<]+)<\/title>/)?.[1];
-
-			newBookmark = (
-				await db
-					.insert(bookmarks)
-					.values({
-						iconUrl,
-						title: siteTitle ? decode(siteTitle) : raw,
-						value: raw,
-						type: 'url',
-						userId: session.userId
-					})
-					.returning()
-			)[0];
+			newBookmark = await createUrlBookmark(raw, session.userId, fetch);
+		} else {
+			console.log('Creating text bookmark');
+			newBookmark = await createTextBookmark(raw, session.userId);
 		}
 
 		return {

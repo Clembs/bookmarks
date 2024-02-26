@@ -103,6 +103,7 @@
 	bind:this={form}
 	use:enhance={() => {
 		isLoading = true;
+
 		bookmarks.push(new Bookmark({
 			value,
 			partial: true,
@@ -147,6 +148,9 @@
 		position: sticky;
 		top: 0.5rem;
 		left: 0;
+		z-index: 1;
+		box-shadow: var(--elevation-2);
+		background-color: var(--color-surface);
 	}
 	ul {
 		display: flex;

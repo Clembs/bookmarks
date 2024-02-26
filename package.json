@@ -43,6 +43,7 @@
   "type": "module",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0-rc.12",
     "drizzle-orm": "^0.29.3",
     "postgres": "^3.4.3",
     "svelte-google-materialdesign-icons": "^1.0.1"
