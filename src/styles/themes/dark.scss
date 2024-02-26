@@ -19,12 +19,16 @@
 	--color-error-container: var(--error-30);
 	--color-on-error-container: var(--error-90);
 
-	--color-background: var(--neutral-10);
-	--color-on-background: var(--neutral-90);
-	--color-surface: var(--neutral-10);
+	--color-surface-dim: var(--neutral-6);
+	--color-surface: var(--neutral-6);
+	--color-surface-bright: var(--neutral-24);
+	--color-surface-container-lowest: var(--neutral-4);
+	--color-surface-container-low: var(--neutral-10);
+	--color-surface-container: var(--neutral-12);
+	--color-surface-container-high: var(--neutral-17);
+	--color-surface-container-highest: var(--neutral-22);
 	--color-on-surface: var(--neutral-90);
-
-	--color-outline: var(--neutral-variant-60);
-	--color-surface-variant: var(--neutral-variant-30);
 	--color-on-surface-variant: var(--neutral-variant-80);
+	--color-outline: var(--neutral-variant-60);
+	--color-outline-variant: var(--neutral-variant-30);
 }

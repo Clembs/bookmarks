@@ -93,7 +93,7 @@
 			top: 50%;
 			transform: translateY(-50%);
 			color: var(--color-on-surface-variant);
-			background: var(--color-background);
+			background: var(--color-surface);
 			padding: 0 0.25rem;
 			transition: all 0.2s;
 		}
@@ -104,11 +104,11 @@
 			width: 100%;
 			padding: 1rem;
 			font-size: 1rem;
-			border-radius: var(--radii-1);
+			border-radius: var(--round-xsm);
 			border: none;
 			outline: 1px solid var(--color-outline);
-			background: var(--color-background);
-			color: var(--color-on-background);
+			background: var(--color-surface);
+			color: var(--color-on-surface);
 
 			&:focus {
 				outline: 2px solid var(--color-primary);

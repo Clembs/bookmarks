@@ -36,7 +36,7 @@
 	button {
 		padding: var(--space-2) var(--space-6);
 		height: var(--space-10);
-		border-radius: var(--radii-round);
+		border-radius: var(--round-full);
 		display: inline-flex;
 		gap: var(--space-1);
 		transition: box-shadow 0.2s ease;

@@ -9,10 +9,11 @@
 body {
 	font-family: var(--fonts-body);
 	font-size: 16px;
-	background-color: var(--color-background);
-	color: var(--color-on-background);
+	background-color: var(--color-surface);
+	color: var(--color-on-surface);
 	margin: 0;
 	padding: 0;
+	min-height: 100vh;
 }
 
 h1,
