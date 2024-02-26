@@ -114,6 +114,7 @@
 			outline: 1px solid var(--color-outline);
 			background: var(--color-surface);
 			color: var(--color-on-surface);
+			font-family: var(--fonts-body);
 
 			&:focus {
 				outline: 2px solid var(--color-primary);
