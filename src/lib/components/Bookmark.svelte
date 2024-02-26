@@ -2,20 +2,28 @@
 	import type { BookmarkType } from '$lib/db/types';
 	import { trimUrl } from '$lib/helpers/trimUrl';
 
-	let { bookmark, active } = $props<{
+	let { bookmark, active, oncontextmenu } = $props<{
 		bookmark: BookmarkType;
 		active?: boolean;
+		oncontextmenu?: (ev: MouseEvent) => void;
 	}>();
 </script>
 
 {#if bookmark.partial}
-	<article class="bookmark" class:active>
+	<article class="bookmark" class:active {oncontextmenu}>
 		<div class="bookmark-title">
 			{bookmark.value}
 		</div>
 	</article>
 {:else if bookmark.type === 'url'}
-	<a class="bookmark" class:active href={bookmark.value} target="_blank" rel="noopener noreferrer">
+	<a
+		class="bookmark"
+		class:active
+		{oncontextmenu}
+		href={bookmark.value}
+		target="_blank"
+		rel="noopener noreferrer"
+	>
 		{#if bookmark.iconUrl}
 			<img
 				class="bookmark-icon"
@@ -45,8 +53,8 @@
 
 <style lang="scss">
 	.bookmark {
-		border-radius: var(--radii-1);
-		padding: var(--space-2);
+		border-radius: var(--round-xsm);
+		padding: var(--space-2) var(--space-3);
 		display: flex;
 		align-items: center;
 		gap: var(--space-2);
@@ -58,9 +66,9 @@
 			place-items: center;
 
 			&.fallback {
-				border-radius: var(--radii-round);
+				border-radius: var(--round-full);
 				background-color: var(--color);
-				color: var(--color-on-primary);
+				color: var(--color-secondary-fixed);
 			}
 		}
 
@@ -76,7 +84,7 @@
 
 		&:hover,
 		&.active {
-			background-color: var(--color-surface-variant);
+			background-color: var(--color-surface-container);
 		}
 	}
 </style>
