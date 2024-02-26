@@ -8,7 +8,7 @@ export class Bookmark {
 
 	constructor(public raw: RawBookmark) {}
 
-	async deleteBookmark() {
+	async delete() {
 		this.bmDeleteState = 'loading';
 		try {
 			const req = await fetch(`/api/bookmarks/${this.raw.id}`, {

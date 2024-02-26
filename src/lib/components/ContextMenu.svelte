@@ -13,8 +13,11 @@
 		onclose?: () => void;
 	}>();
 
+	let selectedMenuItem = $state<number>();
+
 	function closeMenu() {
 		visible = false;
+		selectedMenuItem = undefined;
 		onclose?.();
 	}
 
@@ -22,9 +25,27 @@
 		action();
 		closeMenu();
 	}
+
+	$inspect(selectedMenuItem);
 </script>
 
 <svelte:window
+	onkeydown={(ev) => {
+		if (ev.key === 'Escape') closeMenu();
+		if (ev.key === 'ArrowUp' && selectedMenuItem !== undefined && selectedMenuItem > 0) {
+			ev.preventDefault();
+			selectedMenuItem = (selectedMenuItem - 1 + items.length) % items.length;
+			
+			const el: HTMLAnchorElement | HTMLButtonElement = document.getElementById(`ctx-item-${selectedMenuItem}`)?.querySelector('button, a')!;
+						el?.focus();
+		}
+		if (ev.key === 'ArrowDown' && (selectedMenuItem || 0) < items.length - 1) {
+			ev.preventDefault();
+			selectedMenuItem = selectedMenuItem === undefined ? 0 : (selectedMenuItem + 1) % items.length;
+			const el: HTMLAnchorElement | HTMLButtonElement = document.getElementById(`ctx-item-${selectedMenuItem}`)?.querySelector('button, a')!;
+			el?.focus();
+		}
+	}}
 	onclick={(ev) => {
 		if (ev.target !== el) closeMenu();
 	}}
@@ -33,7 +54,7 @@
 {#snippet contextMenuItemLabel(item: typeof items[number])}
 	<div class="label">
 		{#if item.icon}
-			<svelte:component this={item.icon} variation="filled" />
+			<svelte:component this={item.icon} variation="filled" size={24} />
 		{/if}
 		{item.label}
 	</div>
@@ -42,15 +63,31 @@
 	{/if}
 {/snippet}
 
-<ul role="menu" class="context-menu" style="--x: {x}px;--y: {y}px;">
-	{#each items as item}
-		<li role="menuitem">
+<ul
+	role="menu"
+	class="context-menu"
+	style="--x: {x}px;--y: {y}px;"
+	onmouseenter={() => {
+		selectedMenuItem = undefined;
+		(document.activeElement as HTMLAnchorElement | HTMLButtonElement)?.blur();
+	}}
+>
+	{#each items as item, i}
+		<li role="menuitem" id="ctx-item-{i}">
 			{#if typeof item.action === 'string'}
-				<a href={item.action} target="_blank" rel="noopener noreferrer">
+				<a
+					href={item.action}
+					target="_blank"
+					rel="noopener noreferrer"
+					data-selected={!!selectedMenuItem && i === selectedMenuItem}
+				>
 					{@render contextMenuItemLabel(item)}
 				</a>
 			{:else}
-				<button on:click={() => typeof item.action === 'function' && handleAction(item.action)}>
+				<button
+					onclick={() => typeof item.action === 'function' && handleAction(item.action)}
+					data-selected={i === selectedMenuItem}
+				>
 					{@render contextMenuItemLabel(item)}
 				</button>
 			{/if}
@@ -72,7 +109,6 @@
 		box-shadow: var(--elevation-2);
 		padding: var(--space-1) 0;
 		display: flex;
-		gap: var(--space-1);
 		flex-direction: column;
 		transform: translate(var(--x), var(--y));
 
@@ -81,7 +117,6 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			height: 48px;
 			gap: var(--space-5);
 			width: 100%;
 			padding: var(--space-2) var(--space-3);
@@ -89,8 +124,10 @@
 			cursor: pointer;
 			transition: background-color 0.2s;
 			text-align: left;
+			outline: none;
 
-			&:hover {
+			&:hover,
+			&:focus-within {
 				background-color: var(--color-surface-container-highest);
 			}
 		}
