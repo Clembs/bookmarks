@@ -6,7 +6,7 @@
 	$effect(() => {
 		// dynamically use Command instead of Control
 		if (navigator.userAgent.toLowerCase().includes('mac')) {
-			shortcut.replace('Ctrl+', '⌘');
+			shortcut = shortcut.replace('Ctrl+', '⌘');
 		}
 	});
 </script>
