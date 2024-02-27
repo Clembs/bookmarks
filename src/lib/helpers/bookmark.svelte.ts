@@ -1,19 +1,37 @@
 import { invalidate } from '$app/navigation';
 import type { RawBookmark } from '$lib/db/types';
-import type { FetchState } from './state';
 
 export const urlTypeBookmarks: Partial<RawBookmark['type']>[] = ['url', 'youtube'];
+export const copyTypeBookmarks: Partial<RawBookmark['type']>[] = ['text', 'color', 'contact'];
 
 export class Bookmark {
-	private bmDeleteState = $state<FetchState>();
-	// TODO: Implement edit state and global loading state
-	private bmIsLoading = false;
-	// private bmEditState = $state<FetchState>();
+	private bmIsLoading = $state(false);
+	private bmIsRenaming = $state(false);
 
 	constructor(public raw: RawBookmark) {}
 
+	async rename(newTitle: string) {
+		try {
+			const req = await fetch(`/api/bookmarks/${this.raw.id}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					title: newTitle
+				})
+			});
+
+			await invalidate('bookmarks').then(() => console.log('updated'));
+
+			return req.ok;
+		} catch (error) {
+			console.error(error);
+			return false;
+		}
+	}
+
 	async delete() {
-		this.bmDeleteState = 'loading';
 		try {
 			const req = await fetch(`/api/bookmarks/${this.raw.id}`, {
 				method: 'DELETE'
@@ -21,20 +39,19 @@ export class Bookmark {
 
 			await invalidate('bookmarks').then(() => console.log('updated'));
 
-			this.bmDeleteState = req.ok ? 'success' : 'error';
-
 			return req.ok;
 		} catch (error) {
-			this.bmDeleteState = 'error';
 			return false;
 		}
 	}
 
-	get deleteState() {
-		return this.bmDeleteState;
+	get isRenaming() {
+		return this.bmIsRenaming;
 	}
+	setRenaming = (newState: boolean) => (this.bmIsRenaming = newState);
 
 	get isLoading() {
 		return this.bmIsLoading;
 	}
+	setLoading = (newState: boolean) => (this.bmIsLoading = newState);
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type Bookmark, urlTypeBookmarks } from '$lib/helpers/bookmark.svelte';
+	import { type Bookmark, urlTypeBookmarks, copyTypeBookmarks } from '$lib/helpers/bookmark.svelte';
 	import { trimUrl } from '$lib/helpers/trimUrl';
 	import { Text_snippet } from 'svelte-google-materialdesign-icons';
 	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
@@ -10,7 +10,32 @@
 		active?: boolean;
 		oncontextmenu?: (ev: MouseEvent) => void;
 	}>();
+
+	let textFieldEl = $state<HTMLInputElement>();
+
+	async function submitRename() {
+		bookmark.setLoading(true);
+		await bookmark.rename(bookmark.raw.title!);
+		bookmark.setRenaming(false);
+		bookmark.setLoading(false);
+	}
 </script>
+
+<svelte:window
+	onclick={(ev) => {
+		// TODO: if the click is outside of the text field, submit the renam
+	}}
+	onkeydown={(ev) => {
+		if (bookmark.isRenaming) {
+			if (ev.key === 'Escape') {
+				bookmark.setRenaming(false);
+			}
+			if (ev.key === 'Enter') {
+				submitRename();
+			}
+		}
+	}}
+/>
 
 {#snippet bookmarkContent(bookmark: Bookmark)}
 	<div class="bookmark-content">
@@ -40,21 +65,35 @@
 					<Text_snippet />
 				</div>
 			{/if}
+
 			<div class="bookmark-info">
-				<div class="bookmark-info-title">
-					{bookmark.raw.title}
-				</div>
-				{#if bookmark.raw.type === 'url'}
-					<div class="bookmark-info-subtext">
-						{trimUrl(bookmark.raw.value)}
-					</div>
-				{:else if bookmark.raw.type === 'youtube' && bookmark.raw.metadata}
-					<div class="bookmark-info-subtext">
-						{bookmark.raw.metadata.authorName}
-						• youtube.com
-					</div>
+				{#if bookmark.isRenaming}
+					<input
+						class="bookmark-info-title-edit"
+						type="text"
+						autofocus
+						name="title"
+						bind:value={bookmark.raw.title}
+						bind:this={textFieldEl}
+					/>
+					<div class="bookmark-info-subtext">Esc to cancel, Enter to save</div>
 				{:else}
-					<div class="bookmark-info-subtext hint">Click to copy</div>
+					<div class="bookmark-info-title">
+						{bookmark.raw.title}
+					</div>
+
+					{#if bookmark.raw.type === 'url'}
+						<div class="bookmark-info-subtext">
+							{trimUrl(bookmark.raw.value)}
+						</div>
+					{:else if bookmark.raw.type === 'youtube' && bookmark.raw.metadata}
+						<div class="bookmark-info-subtext">
+							{bookmark.raw.metadata.authorName}
+							• youtube.com
+						</div>
+					{:else}
+						<div class="bookmark-info-subtext hint">Click to copy</div>
+					{/if}
 				{/if}
 			</div>
 		{/if}
@@ -72,7 +111,7 @@
 	<article class="bookmark" class:active {oncontextmenu}>
 		{@render bookmarkContent(bookmark)}
 	</article>
-{:else if urlTypeBookmarks.includes(bookmark.raw.type)}
+{:else if urlTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
 	<a
 		class="bookmark"
 		class:active
@@ -83,7 +122,7 @@
 	>
 		{@render bookmarkContent(bookmark)}
 	</a>
-{:else}
+{:else if copyTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
 	<button
 		onclick={() => {
 			bookmark.raw.value && navigator.clipboard.writeText(bookmark.raw.value);
@@ -94,6 +133,10 @@
 	>
 		{@render bookmarkContent(bookmark)}
 	</button>
+{:else}
+	<article class="bookmark" class:active {oncontextmenu}>
+		{@render bookmarkContent(bookmark)}
+	</article>
 {/if}
 
 <style lang="scss">
@@ -126,6 +169,7 @@
 		&-info {
 			display: flex;
 			flex-direction: column;
+			flex: 1;
 
 			&-title {
 				// max width 50ch, otherwise ellipsis, wrap on word
@@ -134,12 +178,29 @@
 				white-space: nowrap;
 				max-width: 40ch;
 				word-wrap: break-word;
+			}
 
-				&:has(.hint) {
-					translate: 0 0.5rem;
-					transition: translate var(--transition-in-out-standard);
-					will-change: translate;
+			&-title-edit {
+				// make it look like contenteditable text
+				border: none;
+				border-bottom: 1px solid var(--color-on-surface-variant);
+				background-color: transparent;
+				font-family: inherit;
+				font-size: 1rem;
+				color: inherit;
+				width: 100%;
+				padding: 0;
+
+				&:focus {
+					outline: none;
+					border-color: var(--color-primary);
 				}
+			}
+
+			&:has(.hint) &-title {
+				translate: 0 0.5rem;
+				transition: translate var(--transition-in-out-standard);
+				will-change: translate;
 			}
 
 			&-subtext {
@@ -173,7 +234,7 @@
 		&.active {
 			background-color: var(--color-surface-container);
 
-			:global(.bookmark-info-title) {
+			:global(.bookmark-info .bookmark-info-title) {
 				translate: 0 0;
 				transition: translate var(--transition-in-out-standard) 300ms;
 				will-change: translate, opacity;

@@ -36,7 +36,7 @@ export function getBookmarkContextMenuItems(bookmark: Bookmark) {
 		{
 			label: 'Rename',
 			action() {
-				console.log('Edit');
+				bookmark.setRenaming(true);
 			},
 			icon: Edit,
 			shortcut: 'F2'
