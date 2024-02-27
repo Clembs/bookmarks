@@ -1,5 +1,6 @@
 import { relations, sql } from 'drizzle-orm';
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import type { YouTubeMetadata } from './types';
 
 export const users = pgTable('users', {
 	id: text('id')
@@ -71,6 +72,7 @@ export const bookmarks = pgTable('bookmarks', {
 	}).notNull(),
 	title: text('title').notNull(),
 	value: text('value').notNull(),
+	metadata: jsonb('metadata').$type<YouTubeMetadata>(),
 	iconUrl: text('icon_url'),
 	createdAt: timestamp('created_at').notNull().defaultNow(),
 	updatedAt: timestamp('updated_at').notNull().defaultNow()

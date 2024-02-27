@@ -3,53 +3,71 @@
 	import { trimUrl } from '$lib/helpers/trimUrl';
 	import { Text_snippet } from 'svelte-google-materialdesign-icons';
 	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
+	import type { RawBookmark } from '$lib/db/types';
+	import { YOUTUBE_VIDEO_REGEX } from '$lib/validation';
 
 	let { bookmark, active, oncontextmenu } = $props<{
 		bookmark: Bookmark;
 		active?: boolean;
 		oncontextmenu?: (ev: MouseEvent) => void;
 	}>();
+
+	const urlTypeBookmarks: Partial<RawBookmark['type']>[] = ['url', 'youtube'];
 </script>
 
 {#snippet bookmarkContent(bookmark: Bookmark)}
-	{#if bookmark.raw.partial}
-		<IndeterminateProgressSpinner />
-		<div class="bookmark-info-title">
-			{bookmark.raw.title}
-		</div>
-	{:else}
-		{#if bookmark.isLoading}
+	<div class="bookmark-content">
+		{#if bookmark.raw.partial}
 			<IndeterminateProgressSpinner />
-		{:else if bookmark.raw.iconUrl}
-			<img
-				class="bookmark-icon"
-				src={bookmark.raw.iconUrl}
-				alt={bookmark.raw.title}
-				height="24"
-				width="24"
-			/>
-		{:else if bookmark.raw.type === 'url'}
-			<div
-				class="bookmark-icon fallback"
-				style:--color="#{Math.floor(Math.random() * 16777215).toString(16)}"
-			/>
-		{:else}
-			<div class="bookmark-icon">
-				<Text_snippet />
-			</div>
-		{/if}
-		<div class="bookmark-info">
 			<div class="bookmark-info-title">
 				{bookmark.raw.title}
 			</div>
-			{#if bookmark.raw.type === 'url'}
-				<div class="bookmark-info-subtext">
-					{trimUrl(bookmark.raw.value)}
-				</div>
+		{:else}
+			{#if bookmark.isLoading}
+				<IndeterminateProgressSpinner />
+			{:else if bookmark.raw.iconUrl}
+				<img
+					class="bookmark-icon"
+					src={bookmark.raw.iconUrl}
+					alt={bookmark.raw.title}
+					height="24"
+					width="24"
+				/>
+			{:else if bookmark.raw.type === 'url'}
+				<div
+					class="bookmark-icon fallback"
+					style:--color="#{Math.floor(Math.random() * 16777215).toString(16)}"
+				/>
 			{:else}
-				<div class="bookmark-info-subtext hint">Click to copy</div>
+				<div class="bookmark-icon">
+					<Text_snippet />
+				</div>
 			{/if}
-		</div>
+			<div class="bookmark-info">
+				<div class="bookmark-info-title">
+					{bookmark.raw.title}
+				</div>
+				{#if bookmark.raw.type === 'url'}
+					<div class="bookmark-info-subtext">
+						{trimUrl(bookmark.raw.value)}
+					</div>
+				{:else if bookmark.raw.type === 'youtube' && bookmark.raw.metadata}
+					<div class="bookmark-info-subtext">
+						{bookmark.raw.metadata.authorName}
+						• youtube.com
+					</div>
+				{:else}
+					<div class="bookmark-info-subtext hint">Click to copy</div>
+				{/if}
+			</div>
+		{/if}
+	</div>
+	{#if bookmark.raw.type === 'youtube' && bookmark.raw.metadata}
+		<img
+			src="https://img.youtube.com/vi/{bookmark.raw.metadata.videoId || bookmark.raw.value!.match(YOUTUBE_VIDEO_REGEX)![1]}/mqdefault.jpg"
+			alt="Thumbnail for {bookmark.raw.title}"
+			class="bookmark-thumbnail"
+		/>
 	{/if}
 {/snippet}
 
@@ -57,7 +75,7 @@
 	<article class="bookmark" class:active {oncontextmenu}>
 		{@render bookmarkContent(bookmark)}
 	</article>
-{:else if bookmark.raw.type === 'url'}
+{:else if urlTypeBookmarks.includes(bookmark.raw.type)}
 	<a
 		class="bookmark"
 		class:active
@@ -86,8 +104,14 @@
 		border-radius: var(--round-xsm);
 		padding: var(--space-2) var(--space-3);
 		display: flex;
-		align-items: center;
+		flex-direction: column;
 		gap: var(--space-2);
+
+		&-content {
+			display: flex;
+			align-items: center;
+			gap: var(--space-2);
+		}
 
 		&-icon {
 			width: 24px;
@@ -106,15 +130,28 @@
 			display: flex;
 			flex-direction: column;
 
-			:has(.hint) &-title {
-				translate: 0 0.5rem;
-				transition: translate 200ms ease;
-				will-change: translate;
+			&-title {
+				// max width 50ch, otherwise ellipsis, wrap on word
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				max-width: 40ch;
+				word-wrap: break-word;
+
+				&:has(.hint) {
+					translate: 0 0.5rem;
+					transition: translate var(--transition-in-out-standard);
+					will-change: translate;
+				}
 			}
 
 			&-subtext {
 				font-size: 0.75rem;
 				color: var(--color-on-surface-variant);
+
+				a:hover {
+					text-decoration: underline;
+				}
 
 				&.hint {
 					opacity: 0;
@@ -127,13 +164,21 @@
 			}
 		}
 
+		&-thumbnail {
+			border-radius: var(--round-xsm);
+			width: 100%;
+			height: 100%;
+			max-width: 200px;
+			margin-left: var(--space-8);
+		}
+
 		&:hover,
 		&.active {
 			background-color: var(--color-surface-container);
 
 			:global(.bookmark-info-title) {
 				translate: 0 0;
-				transition: translate 200ms ease 300ms;
+				transition: translate var(--transition-in-out-standard) 300ms;
 				will-change: translate, opacity;
 			}
 
@@ -141,8 +186,8 @@
 				opacity: 1;
 				translate: 0 0;
 				transition:
-					translate 200ms ease 300ms,
-					opacity 200ms ease-in-out 300ms;
+					translate var(--transition-in-out-standard) 300ms,
+					opacity var(--transition-in-out-standard) 300ms;
 				will-change: translate, opacity;
 			}
 		}

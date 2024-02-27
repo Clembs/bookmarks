@@ -1,7 +1,11 @@
 import { fail } from '@sveltejs/kit';
 import type { RawBookmark } from '$lib/db/types';
-import { URL_REGEX } from '$lib/validation';
-import { createTextBookmark, createUrlBookmark } from '$lib/helpers/create-bookmark';
+import { URL_REGEX, YOUTUBE_VIDEO_REGEX } from '$lib/validation';
+import {
+	createTextBookmark,
+	createUrlBookmark,
+	createYouTubeBookmark
+} from '$lib/helpers/create-bookmark';
 
 export const actions = {
 	async default({ request, fetch, locals }) {
@@ -19,7 +23,11 @@ export const actions = {
 
 		let newBookmark: RawBookmark | undefined;
 
-		if (URL_REGEX.test(raw)) {
+		if (YOUTUBE_VIDEO_REGEX.test(raw)) {
+			const videoId = raw.match(YOUTUBE_VIDEO_REGEX)![1];
+
+			newBookmark = await createYouTubeBookmark(videoId, session.userId, fetch);
+		} else if (URL_REGEX.test(raw)) {
 			if (!raw.startsWith('http')) {
 				raw = `https://${raw}`;
 			}
