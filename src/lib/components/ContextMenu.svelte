@@ -61,7 +61,7 @@
 		{#if loadingMenuItem === item.label}
 			<IndeterminateProgressSpinner />
 		{:else if item.icon}
-			<svelte:component this={item.icon} variation="filled" size={24} />
+			<svelte:component this={item.icon} variation="filled" size={18} />
 		{/if}
 		{item.label}
 	</div>
@@ -125,12 +125,11 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			gap: var(--space-5);
+			gap: var(--space-6);
 			width: 100%;
 			padding: var(--space-2) var(--space-3);
 			border-radius: var(--round-xsm);
 			cursor: pointer;
-			transition: background-color 0.2s;
 			text-align: left;
 			outline: none;
 
