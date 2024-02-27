@@ -1,4 +1,5 @@
 import { db } from '$lib/db';
+import type { RawBookmark } from '$lib/db/types';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ locals: { getSession }, depends }) {
@@ -9,7 +10,7 @@ export async function load({ locals: { getSession }, depends }) {
 		where: ({ id }, { eq }) => eq(id, session.userId),
 		with: {
 			bookmarks: {
-				orderBy: ({ createdAt }, { desc }) => desc(createdAt)
+				orderBy: ({ createdAt }, { asc }) => asc(createdAt)
 			},
 			categories: true
 		}
@@ -18,7 +19,7 @@ export async function load({ locals: { getSession }, depends }) {
 	depends('bookmarks');
 
 	return {
-		bookmarks: userData.bookmarks,
+		bookmarks: userData.bookmarks as RawBookmark[],
 		categories: userData.categories
 	};
 }

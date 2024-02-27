@@ -12,11 +12,11 @@
 
 	let value = $state('');
 	let error = $state('');
-	let isLoading = $state(false);
 	let textInput = $state<HTMLInputElement | HTMLTextAreaElement | undefined>();
 	let form = $state<HTMLFormElement | undefined>();
 
 	let currentBookmark = $state<Bookmark | undefined>();
+
 	let contextMenuVisible = $state(false);
 	let x = $state(0);
 	let y = $state(0);
@@ -61,6 +61,7 @@
 
 <svelte:window
 	onkeydown={(ev) => {
+		const isNothingFocused = !document.activeElement?.matches('input, textarea');
 		// if it's a letter or number and nothing is focused, focus the text input
 		if (
 			!ev.ctrlKey &&
@@ -68,7 +69,7 @@
 			!ev.altKey &&
 			!ev.shiftKey &&
 			ev.key.length === 1 &&
-			!document.activeElement?.matches('input, textarea')
+			isNothingFocused
 		) {
 			textInput?.focus();
 		}
@@ -76,10 +77,9 @@
 			ev.preventDefault();
 			textInput?.focus();
 		}
-		if ((ev.ctrlKey || ev.metaKey) && ev.key === 's') {
-			ev.preventDefault();
-			textInput?.focus();
-			form?.submit();
+		if ((ev.ctrlKey || ev.metaKey) && ev.key === 'v' && textInput && form && isNothingFocused) {
+			textInput.focus();
+			form.requestSubmit();
 		}
 		if (currentBookmark && !contextMenuVisible) {
 			handleKeyboardShortcut(ev, getBookmarkKbdActions(currentBookmark));
@@ -103,16 +103,24 @@
 	method="post"
 	bind:this={form}
 	use:enhance={() => {
-		isLoading = true;
+		// optimistic update
+		data.bookmarks.push({
+			title: value,
+			value,
+			partial: true,
+		});
 
 		return async ({ result, update }) => {
-			isLoading = false;
+			data.bookmarks.pop();
+
 			if (result.type === "failure" && result.data?.message) {
 				error = result.data.message as string;
 			}
 			
 			if (result.type === "success" && result.data?.bookmark) {
-				bookmarks.push(new Bookmark(result.data.bookmark as RawBookmark));
+				data.bookmarks.push(
+					result.data.bookmark as RawBookmark
+				);
 			}
 			return await update();
 		}
@@ -129,7 +137,7 @@
 </form>
 
 <ul use:autoAnimate>
-	{#each bookmarks as bookmark (bookmark.raw.id)}
+	{#each bookmarks.toReversed() as bookmark (bookmark.raw.id)}
 		<BookmarkComponent
 			active={currentBookmark && currentBookmark.raw.id === bookmark.raw.id}
 			{bookmark}
