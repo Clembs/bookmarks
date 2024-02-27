@@ -1,9 +1,8 @@
 <script lang="ts">
-	import type { Bookmark } from '$lib/helpers/bookmark.svelte';
+	import { type Bookmark, urlTypeBookmarks } from '$lib/helpers/bookmark.svelte';
 	import { trimUrl } from '$lib/helpers/trimUrl';
 	import { Text_snippet } from 'svelte-google-materialdesign-icons';
 	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
-	import type { RawBookmark } from '$lib/db/types';
 	import { YOUTUBE_VIDEO_REGEX } from '$lib/validation';
 
 	let { bookmark, active, oncontextmenu } = $props<{
@@ -11,8 +10,6 @@
 		active?: boolean;
 		oncontextmenu?: (ev: MouseEvent) => void;
 	}>();
-
-	const urlTypeBookmarks: Partial<RawBookmark['type']>[] = ['url', 'youtube'];
 </script>
 
 {#snippet bookmarkContent(bookmark: Bookmark)}

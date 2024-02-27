@@ -2,6 +2,8 @@ import { invalidate } from '$app/navigation';
 import type { RawBookmark } from '$lib/db/types';
 import type { FetchState } from './state';
 
+export const urlTypeBookmarks: Partial<RawBookmark['type']>[] = ['url', 'youtube'];
+
 export class Bookmark {
 	private bmDeleteState = $state<FetchState>();
 	// TODO: Implement edit state and global loading state
