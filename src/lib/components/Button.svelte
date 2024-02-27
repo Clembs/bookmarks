@@ -1,7 +1,7 @@
 <script lang="ts">
 	let {
 		href = '',
-		style = 'primary',
+		style = 'filled',
 		children,
 		type = 'button',
 		inline = true,
@@ -38,19 +38,17 @@
 		height: var(--space-10);
 		border-radius: var(--round-full);
 		display: inline-flex;
-		gap: var(--space-1);
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-2);
 		transition: box-shadow 0.2s ease;
+		user-select: none;
 
 		&.inline {
 			width: fit-content;
 		}
 
-		&.icon {
-			padding-left: var(--space-4);
-			padding: var(--space-4);
-		}
-
-		&.primary {
+		&.filled {
 			background-color: var(--color-primary);
 			color: var(--color-on-primary);
 
@@ -64,9 +62,35 @@
 			}
 		}
 
+		&.text {
+			padding: 0 var(--space-3);
+			background-color: transparent;
+			color: var(--color-primary);
+
+			&:hover {
+				background-color: var(--color-surface-container-highest);
+			}
+		}
+
+		&:has(svg):not(.icon) {
+			padding: var(--space-4);
+		}
+
+		&.icon {
+			width: var(--space-10);
+			padding: 0;
+
+			:global(svg) {
+				width: 24px;
+				height: 24px;
+			}
+		}
+
 		&:disabled {
 			pointer-events: none;
-			background-color: var(--color-outline);
+			background-color: var(--color-on-surface) / 0.12;
+			color: var(--color-on-surface) / 0.36;
+			// opacity: 0.12;
 		}
 	}
 </style>
