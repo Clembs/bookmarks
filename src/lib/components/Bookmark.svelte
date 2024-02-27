@@ -2,6 +2,7 @@
 	import type { Bookmark } from '$lib/helpers/bookmark.svelte';
 	import { trimUrl } from '$lib/helpers/trimUrl';
 	import { Text_snippet } from 'svelte-google-materialdesign-icons';
+	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
 
 	let { bookmark, active, oncontextmenu } = $props<{
 		bookmark: Bookmark;
@@ -11,8 +12,15 @@
 </script>
 
 {#snippet bookmarkContent(bookmark: Bookmark)}
-	{#if bookmark.raw.partial}{:else}
-		{#if bookmark.raw.iconUrl}
+	{#if bookmark.raw.partial}
+		<IndeterminateProgressSpinner />
+		<div class="bookmark-info-title">
+			{bookmark.raw.title}
+		</div>
+	{:else}
+		{#if bookmark.isLoading}
+			<IndeterminateProgressSpinner />
+		{:else if bookmark.raw.iconUrl}
 			<img
 				class="bookmark-icon"
 				src={bookmark.raw.iconUrl}
@@ -33,9 +41,6 @@
 		<div class="bookmark-info">
 			<div class="bookmark-info-title">
 				{bookmark.raw.title}
-				{#if bookmark.deleteState === 'loading'}
-					- loading
-				{/if}
 			</div>
 			{#if bookmark.raw.type === 'url'}
 				<div class="bookmark-info-subtext">

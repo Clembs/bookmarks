@@ -4,6 +4,8 @@ import type { FetchState } from './state';
 
 export class Bookmark {
 	private bmDeleteState = $state<FetchState>();
+	// TODO: Implement edit state and global loading state
+	private bmIsLoading = false;
 	// private bmEditState = $state<FetchState>();
 
 	constructor(public raw: RawBookmark) {}
@@ -28,5 +30,9 @@ export class Bookmark {
 
 	get deleteState() {
 		return this.bmDeleteState;
+	}
+
+	get isLoading() {
+		return this.bmIsLoading;
 	}
 }

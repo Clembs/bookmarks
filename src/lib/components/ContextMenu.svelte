@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ComponentType } from 'svelte';
 	import KeyboardShortcut from '$lib/components/KeyboardShortcut.svelte';
+	import IndeterminateProgressSpinner from '$lib/components/IndeterminateProgressSpinner.svelte';
 
 	type Action = () => void | Promise<void>;
 
@@ -9,11 +10,12 @@
 		y: number;
 		items: { label: string; action: Action | string; icon?: ComponentType; shortcut?: string }[];
 		visible: boolean;
-		el?: HTMLDivElement;
+		el?: HTMLUListElement;
 		onclose?: () => void;
 	}>();
 
 	let selectedMenuItem = $state<number>();
+	let loadingMenuItem = $state<string>();
 
 	function closeMenu() {
 		visible = false;
@@ -21,12 +23,15 @@
 		onclose?.();
 	}
 
-	function handleAction(action: Action) {
-		action();
+	async function handleAction(item: (typeof items)[number]) {
+		if (typeof item.action === 'string') return;
+		loadingMenuItem = item.label;
+
+		await item.action();
+
+		loadingMenuItem = undefined;
 		closeMenu();
 	}
-
-	$inspect(selectedMenuItem);
 </script>
 
 <svelte:window
@@ -35,25 +40,27 @@
 		if (ev.key === 'ArrowUp' && selectedMenuItem !== undefined && selectedMenuItem > 0) {
 			ev.preventDefault();
 			selectedMenuItem = (selectedMenuItem - 1 + items.length) % items.length;
-			
-			const el: HTMLAnchorElement | HTMLButtonElement = document.getElementById(`ctx-item-${selectedMenuItem}`)?.querySelector('button, a')!;
-						el?.focus();
+
+			const clickable: HTMLAnchorElement | HTMLButtonElement = document.getElementById(`ctx-item-${selectedMenuItem}`)?.querySelector('button, a')!;
+			clickable?.focus();
 		}
 		if (ev.key === 'ArrowDown' && (selectedMenuItem || 0) < items.length - 1) {
 			ev.preventDefault();
 			selectedMenuItem = selectedMenuItem === undefined ? 0 : (selectedMenuItem + 1) % items.length;
-			const el: HTMLAnchorElement | HTMLButtonElement = document.getElementById(`ctx-item-${selectedMenuItem}`)?.querySelector('button, a')!;
-			el?.focus();
+			const clickable: HTMLAnchorElement | HTMLButtonElement = document.getElementById(`ctx-item-${selectedMenuItem}`)?.querySelector('button, a')!;
+			clickable?.focus();
 		}
 	}}
 	onclick={(ev) => {
-		if (ev.target !== el) closeMenu();
+		if (el && !el.contains(ev.target as Node)) closeMenu();
 	}}
 />
 
 {#snippet contextMenuItemLabel(item: typeof items[number])}
 	<div class="label">
-		{#if item.icon}
+		{#if loadingMenuItem === item.label}
+			<IndeterminateProgressSpinner />
+		{:else if item.icon}
 			<svelte:component this={item.icon} variation="filled" size={24} />
 		{/if}
 		{item.label}
@@ -71,6 +78,7 @@
 		selectedMenuItem = undefined;
 		(document.activeElement as HTMLAnchorElement | HTMLButtonElement)?.blur();
 	}}
+	bind:this={el}
 >
 	{#each items as item, i}
 		<li role="menuitem" id="ctx-item-{i}">
@@ -85,7 +93,7 @@
 				</a>
 			{:else}
 				<button
-					onclick={() => typeof item.action === 'function' && handleAction(item.action)}
+					onclick={() => typeof item.action === 'function' && handleAction(item)}
 					data-selected={i === selectedMenuItem}
 				>
 					{@render contextMenuItemLabel(item)}
