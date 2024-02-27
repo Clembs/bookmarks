@@ -20,9 +20,6 @@ export async function fetchWithRedirections(
 	urlOrOptions?: string | RequestInit,
 	options?: RequestInit
 ): Promise<Response> {
-	console.log(urlOrFetch);
-	console.log(urlOrOptions);
-
 	// this was a headache to code but the end result is worth it
 	const fetchFn = typeof urlOrFetch === 'string' ? fetch : urlOrFetch;
 	const url = typeof urlOrOptions === 'string' ? urlOrOptions : (urlOrFetch as string);

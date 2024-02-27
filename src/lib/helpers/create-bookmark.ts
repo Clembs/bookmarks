@@ -61,8 +61,6 @@ export async function createYouTubeBookmark(
 		author_url: string;
 	} = await videoDetailsReq.json();
 
-	console.log('Video details', videoDetails);
-
 	const [newBookmark] = await db
 		.insert(bookmarks)
 		.values({
