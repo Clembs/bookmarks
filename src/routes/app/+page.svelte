@@ -8,6 +8,7 @@
 	import { getBookmarkKbdActions } from '$lib/helpers/keyboard/bookmark';
 	import { Bookmark } from '$lib/helpers/bookmark.svelte';
 	import type { RawBookmark } from '$lib/db/types';
+	import autoAnimate from '@formkit/auto-animate';
 
 	let value = $state('');
 	let error = $state('');
@@ -104,11 +105,6 @@
 	use:enhance={() => {
 		isLoading = true;
 
-		bookmarks.push(new Bookmark({
-			value,
-			partial: true,
-		}));
-
 		return async ({ result, update }) => {
 			isLoading = false;
 			if (result.type === "failure" && result.data?.message) {
@@ -116,7 +112,6 @@
 			}
 			
 			if (result.type === "success" && result.data?.bookmark) {
-				bookmarks.pop();
 				bookmarks.push(new Bookmark(result.data.bookmark as RawBookmark));
 			}
 			return await update();
@@ -133,8 +128,8 @@
 	/>
 </form>
 
-<ul>
-	{#each bookmarks as bookmark}
+<ul use:autoAnimate>
+	{#each bookmarks as bookmark (bookmark.raw.id)}
 		<BookmarkComponent
 			active={currentBookmark && currentBookmark.raw.id === bookmark.raw.id}
 			{bookmark}
