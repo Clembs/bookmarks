@@ -36,6 +36,7 @@ export async function PATCH({ params, request, locals: { getSession } }) {
 		.update(bookmarks)
 		.set({
 			...newData,
+			title: newData.title?.trim(),
 			updatedAt: new Date()
 		})
 		.where(eq(bookmarks.id, bookmark.id));

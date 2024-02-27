@@ -16,7 +16,7 @@ export async function createUrlBookmark(
 		.insert(bookmarks)
 		.values({
 			iconUrl,
-			title: siteTitle ? decode(siteTitle) : fullUrl,
+			title: siteTitle ? decode(siteTitle.trim()) : fullUrl,
 			value: fullUrl,
 			type: 'url',
 			userId: userId
@@ -64,7 +64,7 @@ export async function createYouTubeBookmark(
 	const [newBookmark] = await db
 		.insert(bookmarks)
 		.values({
-			title: videoDetails.title,
+			title: videoDetails.title.trim(),
 			value: videoUrl,
 			iconUrl: `https://www.youtube.com/s/desktop/fe730087/img/favicon_48x48.png`,
 			type: 'youtube',
