@@ -104,24 +104,24 @@
 	bind:this={form}
 	use:enhance={() => {
 		// optimistic update
-		data.bookmarks.push({
-			title: value,
-			value,
-			partial: true,
-		});
+		// data.bookmarks.push({
+		// 	title: value,
+		// 	value,
+		// 	partial: true,
+		// });
 
 		return async ({ result, update }) => {
-			data.bookmarks.pop();
+			// data.bookmarks.pop();
 
 			if (result.type === "failure" && result.data?.message) {
 				error = result.data.message as string;
 			}
 			
-			if (result.type === "success" && result.data?.bookmark) {
-				data.bookmarks.push(
-					result.data.bookmark as RawBookmark
-				);
-			}
+			// if (result.type === "success" && result.data?.bookmark) {
+				// data.bookmarks.push(
+				// 	result.data.bookmark as RawBookmark
+				// );
+			// }
 			return await update();
 		}
 	}}
@@ -137,7 +137,7 @@
 </form>
 
 <ul use:autoAnimate>
-	{#each bookmarks.toReversed() as bookmark (bookmark.raw.id)}
+	{#each bookmarks as bookmark (bookmark.raw.id)}
 		<BookmarkComponent
 			active={currentBookmark && currentBookmark.raw.id === bookmark.raw.id}
 			{bookmark}

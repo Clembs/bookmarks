@@ -10,7 +10,7 @@ export async function load({ locals: { getSession }, depends }) {
 		where: ({ id }, { eq }) => eq(id, session.userId),
 		with: {
 			bookmarks: {
-				orderBy: ({ createdAt }, { asc }) => asc(createdAt)
+				orderBy: ({ createdAt }, { desc }) => desc(createdAt)
 			},
 			categories: true
 		}
