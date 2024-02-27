@@ -8,7 +8,9 @@ export async function load({ locals: { getSession }, depends }) {
 	const [userData] = await db.query.users.findMany({
 		where: ({ id }, { eq }) => eq(id, session.userId),
 		with: {
-			bookmarks: true,
+			bookmarks: {
+				orderBy: ({ createdAt }, { desc }) => desc(createdAt)
+			},
 			categories: true
 		}
 	});
