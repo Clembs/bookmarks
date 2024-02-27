@@ -12,10 +12,11 @@
 	}>();
 
 	let textFieldEl = $state<HTMLInputElement>();
+	let newTitle = $state(bookmark.raw.title!);
 
 	async function submitRename() {
 		bookmark.setLoading(true);
-		await bookmark.rename(bookmark.raw.title!);
+		await bookmark.rename(newTitle);
 		bookmark.setRenaming(false);
 		bookmark.setLoading(false);
 	}
@@ -29,6 +30,7 @@
 		if (bookmark.isRenaming) {
 			if (ev.key === 'Escape') {
 				bookmark.setRenaming(false);
+				newTitle = bookmark.raw.title!;
 			}
 			if (ev.key === 'Enter') {
 				submitRename();
@@ -40,13 +42,13 @@
 {#snippet bookmarkContent(bookmark: Bookmark)}
 	<div class="bookmark-content">
 		{#if bookmark.raw.partial}
-			<IndeterminateProgressSpinner />
+			<IndeterminateProgressSpinner size={24} />
 			<div class="bookmark-info-title">
 				{bookmark.raw.title}
 			</div>
 		{:else}
 			{#if bookmark.isLoading}
-				<IndeterminateProgressSpinner />
+				<IndeterminateProgressSpinner size={24} />
 			{:else if bookmark.raw.iconUrl}
 				<img
 					class="bookmark-icon"
@@ -73,7 +75,7 @@
 						type="text"
 						autofocus
 						name="title"
-						bind:value={bookmark.raw.title}
+						bind:value={newTitle}
 						bind:this={textFieldEl}
 					/>
 					<div class="bookmark-info-subtext">Esc to cancel, Enter to save</div>
