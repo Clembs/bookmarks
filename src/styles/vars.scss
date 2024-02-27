@@ -1,9 +1,9 @@
 :root {
-	// Typography:
+	// Typography
 	--fonts-body: 'Synonym', sans-serif;
 	--fonts-headings: 'Cabinet Grotesk', sans-serif;
 
-	// Spacing:
+	// Spacing
 	--space-1: 4px;
 	--space-2: 8px;
 	--space-3: 12px;
@@ -15,7 +15,7 @@
 	--space-9: 36px;
 	--space-10: 40px;
 
-	// Corner radii:
+	// Corner radii
 	--round-xsm: 4px;
 	--round-sm: 8px;
 	--round-md: 12px;
@@ -23,7 +23,7 @@
 	--round-xlg: 28px;
 	--round-full: 9999px;
 
-	// Colors:
+	// Colors
 	// (custom source color: #0059ff)
 	--primary-0: hsl(0, 0%, 0%);
 	--primary-10: hsl(223, 100%, 15%);
@@ -137,7 +137,7 @@
 	--neutral-variant-99: hsl(285, 100%, 99%);
 	--neutral-variant-100: hsl(0, 0%, 100%);
 
-	// fixed colors
+	// Fixed colors
 	--color-primary-fixed: var(--primary-90);
 	--color-primary-fixed-dim: var(--primary-80);
 	--color-on-primary-fixed: var(--primary-10);
@@ -153,8 +153,7 @@
 	--color-on-tertiary-fixed: var(--tertiary-10);
 	--color-on-tertiary-fixed-dim: var(--tertiary-30);
 
-	// Shadows:
-
+	// Shadows
 	--elevation-1: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px,
 		rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
 	--elevation-2: rgba(0, 0, 0, 0.2) 0px 3px 3px -2px, rgba(0, 0, 0, 0.14) 0px 3px 4px 0px,
@@ -165,4 +164,38 @@
 		rgba(0, 0, 0, 0.12) 0px 3px 14px 2px;
 	--elevation-5: rgba(0, 0, 0, 0.2) 0px 7px 8px -4px, rgba(0, 0, 0, 0.14) 0px 12px 17px 2px,
 		rgba(0, 0, 0, 0.12) 0px 5px 22px 4px;
+
+	// Easing functions
+	--easing-emphasized: var(--easing-standard);
+	--easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+	--easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+	--easing-standard: cubic-bezier(0.2, 0, 0, 1);
+	--easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+	--easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+
+	// Durations
+	--duration-short1: 50ms;
+	--duration-short2: 100ms;
+	--duration-short3: 150ms;
+	--duration-short4: 200ms;
+	--duration-medium1: 250ms;
+	--duration-medium2: 300ms;
+	--duration-medium3: 350ms;
+	--duration-medium4: 400ms;
+	--duration-long1: 450ms;
+	--duration-long2: 500ms;
+	--duration-long3: 550ms;
+	--duration-long4: 600ms;
+	--duration-xlong1: 700ms;
+	--duration-xlong2: 800ms;
+	--duration-xlong3: 900ms;
+	--duration-xlong4: 1000ms;
+
+	// Transition defaults
+	--transition-in-out-emphasized: var(--duration-long2) var(--easing-emphasized);
+	--transition-enter-screen-emphasized: var(--duration-medium4) var(--easing-emphasized-decelerate);
+	--transition-exit-screen-emphasized: var(--duration-short4) var(--easing-emphasized-accelerate);
+	--transition-in-out-standard: var(--duration-medium2) var(--easing-standard);
+	--transition-enter-screen-standard: var(--duration-medium1) var(--easing-standard-decelerate);
+	--transition-exit-screen-standard: var(--duration-short4) var(--easing-standard-accelerate);
 }
