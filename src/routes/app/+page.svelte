@@ -43,13 +43,13 @@
 		}
 		// TODO: fix whatever i did here
 		// check context menu collision with the right of the screen, or the left
-		if (rect.left + selectMenuWidth > window.innerWidth) {
-			x = window.innerWidth - selectMenuWidth - 16;
-		} else if (rect.left < selectMenuWidth) {
-			x = 16;
-		} else {
-			x = ev.clientX;
-		}
+		// if (rect.left + selectMenuWidth > window.innerWidth) {
+		// 	x = window.innerWidth - selectMenuWidth - 16;
+		// } else if (rect.left < selectMenuWidth) {
+		// 	x = 16;
+		// } else {
+		x = ev.clientX;
+		// }
 
 		contextMenuVisible = true;
 	}
@@ -144,7 +144,7 @@
 		top: 0.5rem;
 		left: 0;
 		z-index: 1;
-		box-shadow: var(--elevation-2);
+		// box-shadow: var(--elevation-2);
 		background-color: var(--color-surface);
 	}
 	ul {
