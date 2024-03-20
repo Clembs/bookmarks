@@ -76,19 +76,36 @@
 			navigation.setState('keyboard');
 
 			const index = bookmarks.findIndex((b) => b.raw.id === currentBookmark?.raw.id);
+			let newIndex = index;
 
 			if (ev.key === 'ArrowDown' && index < bookmarks.length - 1) {
-				currentBookmark = bookmarks[index + 1];
+				newIndex++;
+				currentBookmark = bookmarks[newIndex];
 			}
 			if (ev.key === 'ArrowUp' && index > 0) {
-				currentBookmark = bookmarks[index - 1];
+				newIndex--;
+				currentBookmark = bookmarks[newIndex];
 			}
 
-			const element = listEl?.children[index + 1];
-			const rect = element?.getBoundingClientRect();
+			const bmEl = listEl?.children[newIndex];
+			const bmElRect = bmEl?.getBoundingClientRect();
 
-			if (element && rect && (rect.top < 0 || rect.bottom > window.innerHeight)) {
-				element.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+			const inputFormEl = document.querySelector("#add-bookmark") as HTMLElement;
+			const inputRect = inputFormEl.getBoundingClientRect();
+			const inputHeight = inputRect.height + 16;
+
+			if (bmEl && bmElRect && 
+				(bmElRect.top - inputHeight < 0 || bmElRect.bottom > window.innerHeight)
+			) {
+				bmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+				if (ev.key === "ArrowUp" && bmElRect.top - inputHeight < 0) {
+					const scrollableEl = document.getElementById("scrollable-wrapper")!;
+					scrollableEl.scrollBy({
+						top: -inputHeight,
+						behavior: 'smooth'
+					});
+				}
 			}
 		}
 	}}
@@ -116,3 +133,13 @@
 		/>
 	{/each}
 </ul>
+
+<style lang="scss">
+	@import '../../styles/vars.scss';
+
+	ul {
+		@media (max-width: $compact) {
+			margin-bottom: 4rem;
+		}
+	}
+</style>
