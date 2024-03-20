@@ -166,11 +166,12 @@
 			display: flex;
 			align-items: center;
 			gap: var(--space-2);
+			width: 100%;
 		}
 
 		&-icon {
-			width: 24px;
-			height: 24px;
+			min-width: 24px;
+			min-height: 24px;
 			display: grid;
 			place-items: center;
 
@@ -185,6 +186,7 @@
 			display: flex;
 			flex-direction: column;
 			flex: 1;
+			width: 100%;
 
 			&-title {
 				// max width 50ch, otherwise ellipsis, wrap on word

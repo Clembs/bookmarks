@@ -2,6 +2,7 @@
 	import type { ComponentType } from 'svelte';
 	import KeyboardShortcut from '$lib/components/KeyboardShortcut.svelte';
 	import IndeterminateProgressSpinner from '$lib/components/IndeterminateProgressSpinner.svelte';
+	import Scrim from './Scrim.svelte';
 
 	type Action = () => void | Promise<void>;
 
@@ -70,6 +71,13 @@
 	{/if}
 {/snippet}
 
+<Scrim
+	onclose={() => {
+		console.log('onclose');
+		closeMenu();
+	}}
+/>
+
 <ul
 	role="menu"
 	class="context-menu"
@@ -104,6 +112,8 @@
 </ul>
 
 <style lang="scss">
+	@import '../../styles/vars.scss';
+
 	.context-menu {
 		position: fixed;
 		top: 0;
@@ -137,6 +147,21 @@
 			&:focus-within {
 				background-color: var(--color-surface-container-highest);
 			}
+
+			@media (max-width: $compact) {
+				padding: var(--space-4) var(--space-4);
+				border-radius: 0;
+			}
+		}
+
+		@media (max-width: $compact) {
+			bottom: 0;
+			width: 100%;
+			transform: none;
+			top: auto;
+			max-width: 100%;
+			border-radius: var(--round-xlg) var(--round-xlg) 0 0;
+			padding: var(--space-6) 0;
 		}
 	}
 
@@ -144,5 +169,14 @@
 		display: flex;
 		align-items: center;
 		gap: var(--space-3);
+
+		@media (max-width: $compact) {
+			gap: var(--space-6);
+
+			:global(svg) {
+				width: 24px;
+				height: 24px;
+			}
+		}
 	}
 </style>

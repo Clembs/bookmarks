@@ -9,7 +9,7 @@
 </script>
 
 {#snippet toggleButton(type: "close" | 'open')}
-	<Button style="text" icon onclick={() => (isSidebarOpen = !isSidebarOpen)}>
+	<Button style="text" icon onclick={() => (isSidebarOpen = type === 'open')}>
 		{#if type === 'close'}
 			<Menu_open />
 		{:else}
@@ -33,7 +33,7 @@
 			<ul id="top-items">
 				<a data-active={$page.url.pathname === '/app'} href="/app">All bookmarks</a>
 				{#each data.categories as category (category.id)}
-					<a data-active={$page.url.pathname === '/app'} href="/app/{category.id}">
+					<a data-active={$page.url.pathname === `/app/${category.id}`} href="/app/{category.id}">
 						{category.name}
 					</a>
 				{/each}
@@ -166,7 +166,7 @@
 
 			main {
 				padding: var(--space-4);
-				max-width: 1000px;
+				max-width: 700px;
 				margin: 0 auto;
 			}
 		}

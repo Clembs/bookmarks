@@ -16,9 +16,15 @@
 </kbd>
 
 <style lang="scss">
+	@import '../../styles/vars.scss';
+
 	kbd {
 		font-family: var(--fonts-body);
 		font-size: 0.9rem;
 		color: var(--color-on-surface-variant);
+
+		@media (max-width: $compact) {
+			display: none;
+		}
 	}
 </style>

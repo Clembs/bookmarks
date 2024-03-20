@@ -42,6 +42,7 @@
 <h1>Bookmarks</h1>
 
 <form
+	id="add-bookmark"
 	method="post"
 	bind:this={form}
 	use:enhance={() => {
@@ -82,6 +83,8 @@
 <BookmarkList {bookmarks} />
 
 <style lang="scss">
+	@import '../../styles/vars.scss';
+
 	form {
 		position: sticky;
 		top: 0.5rem;
@@ -89,6 +92,14 @@
 		z-index: 1;
 		// box-shadow: var(--elevation-2);
 		background-color: var(--color-surface);
+
+		@media (max-width: $compact) {
+			position: fixed;
+			width: 100%;
+			top: auto;
+			bottom: 0;
+			padding: 0 var(--space-4);
+		}
 	}
 	ul {
 		display: flex;

@@ -10,7 +10,7 @@
 	#content {
 		display: flex;
 		flex-direction: column;
-		max-width: 768px;
+		max-width: 700px;
 		margin: 0 auto;
 		padding: var(--space-4);
 	}
