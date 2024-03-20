@@ -9,7 +9,6 @@ export type ShortcutActions = {
 export function handleKeyboardShortcut(event: KeyboardEvent, shortcuts: ShortcutActions) {
 	const os = navigator.platform;
 	const meta = os.includes('Mac') ? 'Meta' : 'Control';
-	console.log(event.key);
 
 	const shortcut = shortcuts.find((shortcut) => {
 		const modifierKeys = [];
@@ -19,8 +18,6 @@ export function handleKeyboardShortcut(event: KeyboardEvent, shortcuts: Shortcut
 
 		return modifierKeys.every((key) => event.getModifierState(key)) && event.key === shortcut.key;
 	});
-
-	console.log(shortcut);
 
 	if (shortcut) {
 		event.preventDefault();

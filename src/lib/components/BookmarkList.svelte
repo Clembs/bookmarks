@@ -6,8 +6,10 @@
 	import { handleKeyboardShortcut } from '$lib/helpers/keyboard/handler';
 	import { getBookmarkKbdActions } from '$lib/helpers/keyboard/bookmark';
 	import ContextMenu from './ContextMenu.svelte';
+	import { createNavigation } from '$lib/helpers/navigation.svelte';
 
 	let currentBookmark = $state<Bookmark | undefined>();
+	let navigation = createNavigation();
 
 	let contextMenuVisible = $state(false);
 	let x = $state(0);
@@ -49,16 +51,30 @@
 	let { bookmarks } = $props<{
 		bookmarks: Bookmark[];
 	}>();
+
+	$inspect(navigation.state);
+
+	function useMouse(cb: (x: MouseEvent) => void) {
+		return (ev: MouseEvent) => {
+			if (contextMenuVisible) return;
+			navigation.setState('mouse');
+			cb(ev);
+		};
+	}
 </script>
 
 <svelte:window
 	onkeydown={(ev) => {
-		if (currentBookmark && !contextMenuVisible) {
+		if (contextMenuVisible) return;
+
+		if (currentBookmark) {
 			handleKeyboardShortcut(ev, getBookmarkKbdActions(currentBookmark));
 		}
 
 		if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
 			ev.preventDefault();
+			navigation.setState('keyboard');
+
 			const index = bookmarks.findIndex((b) => b.raw.id === currentBookmark?.raw.id);
 
 			if (ev.key === 'ArrowDown' && index < bookmarks.length - 1) {
@@ -92,8 +108,11 @@
 	{#each bookmarks as bookmark (bookmark.raw.id)}
 		<BookmarkComponent
 			active={currentBookmark && currentBookmark.raw.id === bookmark.raw.id}
+			{navigation}
 			{bookmark}
-			oncontextmenu={(ev) => showContextMenu(ev, bookmark)}
+			onmouseenter={useMouse(() => (currentBookmark = bookmark))}
+			onmouseleave={useMouse(() => (currentBookmark = undefined))}
+			oncontextmenu={useMouse((ev) => showContextMenu(ev, bookmark))}
 		/>
 	{/each}
 </ul>

@@ -4,11 +4,15 @@
 	import { Text_snippet } from 'svelte-google-materialdesign-icons';
 	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
 	import { YOUTUBE_VIDEO_REGEX } from '$lib/validation';
+	import type { createNavigation } from '$lib/helpers/navigation.svelte';
 
-	let { bookmark, active, oncontextmenu } = $props<{
+	let { bookmark, active, navigation, ...mouseEvents } = $props<{
 		bookmark: Bookmark;
 		active?: boolean;
+		navigation: ReturnType<typeof createNavigation>;
 		oncontextmenu?: (ev: MouseEvent) => void;
+		onmouseenter?: (ev: MouseEvent) => void;
+		onmouseleave?: (ev: MouseEvent) => void;
 	}>();
 
 	let textFieldEl = $state<HTMLInputElement>();
@@ -95,11 +99,13 @@
 						</div>
 					{:else}
 						<div class="bookmark-info-subtext hint">
-							{#if active}
+							<!-- {#if active} -->
+							{#if navigation.state === 'keyboard'}
 								Enter to copy
 							{:else}
 								Click to copy
 							{/if}
+							<!-- {/if} -->
 						</div>
 					{/if}
 				{/if}
@@ -116,14 +122,14 @@
 {/snippet}
 
 {#if bookmark.raw.partial}
-	<article class="bookmark" class:active {oncontextmenu}>
+	<article class="bookmark" class:active {...mouseEvents}>
 		{@render bookmarkContent(bookmark)}
 	</article>
 {:else if urlTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
 	<a
 		class="bookmark"
 		class:active
-		{oncontextmenu}
+		{...mouseEvents}
 		href={bookmark.raw.value}
 		target="_blank"
 		rel="noopener noreferrer"
@@ -137,12 +143,12 @@
 		}}
 		class="bookmark"
 		class:active
-		{oncontextmenu}
+		{...mouseEvents}
 	>
 		{@render bookmarkContent(bookmark)}
 	</button>
 {:else}
-	<article class="bookmark" class:active {oncontextmenu}>
+	<article class="bookmark" class:active {...mouseEvents}>
 		{@render bookmarkContent(bookmark)}
 	</article>
 {/if}
@@ -239,7 +245,7 @@
 			margin-left: var(--space-8);
 		}
 
-		&:hover,
+		// &:hover,
 		&.active {
 			background-color: var(--color-surface-container);
 
