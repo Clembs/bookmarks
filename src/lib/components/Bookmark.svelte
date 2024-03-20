@@ -94,7 +94,13 @@
 							• youtube.com
 						</div>
 					{:else}
-						<div class="bookmark-info-subtext hint">Click to copy</div>
+						<div class="bookmark-info-subtext hint">
+							{#if active}
+								Enter to copy
+							{:else}
+								Click to copy
+							{/if}
+						</div>
 					{/if}
 				{/if}
 			</div>
@@ -148,6 +154,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-2);
+		width: 100%;
 
 		&-content {
 			display: flex;
