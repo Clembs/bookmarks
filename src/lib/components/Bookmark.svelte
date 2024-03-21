@@ -22,10 +22,9 @@
 	async function submitRename() {
 		if (!bookmark.isRenaming) return;
 
-		bookmark.setLoading(true);
-		await bookmark.rename(newTitle);
+		bookmark.raw.title = newTitle;
 		bookmark.setRenaming(false);
-		bookmark.setLoading(false);
+		await bookmark.rename(newTitle);
 	}
 </script>
 
@@ -142,9 +141,9 @@
 		class:keyboard={navigation.state === 'keyboard'}
 		class:active
 		{...mouseEvents}
-		use:clickoutside
-		on:clickoutside={submitRename}
 	>
+		<!-- use:clickoutside
+		on:clickoutside={submitRename} -->
 		{@render bookmarkContent(bookmark)}
 	</a>
 {:else if copyTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
@@ -156,9 +155,9 @@
 		class:keyboard={navigation.state === 'keyboard'}
 		class:active
 		{...mouseEvents}
-		use:clickoutside
-		on:clickoutside={submitRename}
 	>
+		<!-- use:clickoutside
+		on:clickoutside={submitRename} -->
 		{@render bookmarkContent(bookmark)}
 	</button>
 {:else}
@@ -167,9 +166,9 @@
 		class:keyboard={navigation.state === 'keyboard'}
 		class:active
 		{...mouseEvents}
-		use:clickoutside
-		on:clickoutside={submitRename}
 	>
+		<!-- use:clickoutside
+		on:clickoutside={submitRename} -->
 		{@render bookmarkContent(bookmark)}
 	</article>
 {/if}
