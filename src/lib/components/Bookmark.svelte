@@ -20,6 +20,8 @@
 	let newTitle = $state(bookmark.raw.title!);
 
 	async function submitRename() {
+		if (!bookmark.isRenaming) return;
+
 		bookmark.setLoading(true);
 		await bookmark.rename(newTitle);
 		bookmark.setRenaming(false);
