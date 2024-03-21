@@ -24,7 +24,7 @@ export function getBookmarkContextMenuItems(bookmark: Bookmark) {
 
 	if (bookmark.raw.value) {
 		items.push({
-			label: 'Copy as text',
+			label: urlTypeBookmarks.includes(bookmark.raw.type) ? 'Copy URL' : 'Copy as text',
 			action: () => navigator.clipboard.writeText(bookmark.raw.value!),
 			icon: ContentCopy,
 			shortcut: 'Ctrl+C'
