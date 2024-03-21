@@ -165,6 +165,12 @@
 		}
 	}
 
+	@media (min-width: $compact) {
+		:global(.scrim) {
+			display: none;
+		}
+	}
+
 	.label {
 		display: flex;
 		align-items: center;
