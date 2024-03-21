@@ -5,6 +5,7 @@
 	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
 	import { YOUTUBE_VIDEO_REGEX } from '$lib/validation';
 	import type { createNavigation } from '$lib/helpers/navigation.svelte';
+	import { clickoutside } from '@svelte-put/clickoutside';
 
 	let { bookmark, active, navigation, ...mouseEvents } = $props<{
 		bookmark: Bookmark;
@@ -122,17 +123,25 @@
 {/snippet}
 
 {#if bookmark.raw.partial}
-	<article class="bookmark" class:active {...mouseEvents}>
+	<article
+		class="bookmark"
+		class:keyboard={navigation.state === 'keyboard'}
+		class:active
+		{...mouseEvents}
+	>
 		{@render bookmarkContent(bookmark)}
 	</article>
 {:else if urlTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
 	<a
-		class="bookmark"
-		class:active
-		{...mouseEvents}
 		href={bookmark.raw.value}
 		target="_blank"
 		rel="noopener noreferrer"
+		class="bookmark"
+		class:keyboard={navigation.state === 'keyboard'}
+		class:active
+		{...mouseEvents}
+		use:clickoutside
+		on:clickoutside={submitRename}
 	>
 		{@render bookmarkContent(bookmark)}
 	</a>
@@ -142,13 +151,23 @@
 			bookmark.raw.value && navigator.clipboard.writeText(bookmark.raw.value);
 		}}
 		class="bookmark"
+		class:keyboard={navigation.state === 'keyboard'}
 		class:active
 		{...mouseEvents}
+		use:clickoutside
+		on:clickoutside={submitRename}
 	>
 		{@render bookmarkContent(bookmark)}
 	</button>
 {:else}
-	<article class="bookmark" class:active {...mouseEvents}>
+	<article
+		class="bookmark"
+		class:keyboard={navigation.state === 'keyboard'}
+		class:active
+		{...mouseEvents}
+		use:clickoutside
+		on:clickoutside={submitRename}
+	>
 		{@render bookmarkContent(bookmark)}
 	</article>
 {/if}
@@ -255,6 +274,10 @@
 				translate: 0 0;
 				transition: translate var(--transition-in-out-standard) 300ms;
 				will-change: translate, opacity;
+			}
+
+			&.keyboard {
+				outline: 2px solid var(--color-primary);
 			}
 
 			:global(.hint) {
