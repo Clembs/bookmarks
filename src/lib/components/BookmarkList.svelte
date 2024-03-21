@@ -67,7 +67,7 @@
 	onkeydown={(ev) => {
 		if (contextMenuVisible) return;
 
-		if (currentBookmark) {
+		if (navigation.state === "keyboard" && currentBookmark) {
 			handleKeyboardShortcut(ev, getBookmarkKbdActions(currentBookmark));
 		}
 
