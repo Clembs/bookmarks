@@ -85,11 +85,16 @@
 <style lang="scss">
 	@import '../../styles/vars.scss';
 
+	h1 {
+		margin-bottom: 0;
+	}
+
 	form {
 		position: sticky;
-		top: 0.5rem;
+		top: 0;
 		left: 0;
 		z-index: 1;
+		padding-top: var(--space-4);
 		// box-shadow: var(--elevation-2);
 		background-color: var(--color-surface);
 
