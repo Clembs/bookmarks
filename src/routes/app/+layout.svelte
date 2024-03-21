@@ -5,8 +5,24 @@
 
 	let { children, data } = $props();
 
-	let isSidebarOpen = $state(true);
+	let isSidebarOpen = $state(false);
+
+	$effect(() => {
+		const isExpanded = window.matchMedia('(min-width: 840px)').matches;
+
+		if (isExpanded) {
+			isSidebarOpen = true;
+		}
+	});
 </script>
+
+<svelte:window
+	onresize={(ev) => {
+		const isExpanded = window.matchMedia('(min-width: 840px)').matches;
+
+		isSidebarOpen = isExpanded;
+	}}
+/>
 
 {#snippet toggleButton(type: "close" | 'open')}
 	<Button style="text" icon onclick={() => (isSidebarOpen = type === 'open')}>
@@ -56,6 +72,8 @@
 </div>
 
 <style lang="scss">
+	@import '../../styles/vars.scss';
+
 	#layout {
 		display: flex;
 		height: 100vh;
@@ -165,6 +183,7 @@
 			overflow-y: auto;
 
 			main {
+				position: relative;
 				padding: var(--space-4);
 				max-width: 700px;
 				margin: 0 auto;
