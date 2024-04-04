@@ -44,8 +44,9 @@
 		background-color: var(--color-surface-container-low);
 		padding-left: var(--space-2);
 
-		#menu-btn {
-			position: absolute;
+		#menu-btn {  
+			width: fit-content;
+			position: sticky;
 			top: var(--space-4);
 			left: var(--space-4);
 			z-index: 1;
