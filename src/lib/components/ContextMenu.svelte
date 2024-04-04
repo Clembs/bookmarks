@@ -6,14 +6,14 @@
 
 	type Action = () => void | Promise<void>;
 
-	let { x, y, items, visible, el, onclose } = $props<{
+	let { x, y, items, visible = $bindable(), el, onclose }: {
 		x: number;
 		y: number;
 		items: { label: string; action: Action | string; icon?: ComponentType; shortcut?: string }[];
 		visible: boolean;
 		el?: HTMLUListElement;
 		onclose?: () => void;
-	}>();
+	} = $props();
 
 	let selectedMenuItem = $state<number>();
 	let loadingMenuItem = $state<string>();
@@ -124,9 +124,9 @@
 		max-width: 280px;
 		background-color: var(--color-surface-container);
 		color: var(--color-on-surface);
-		border-radius: var(--round-xsm);
+		border-radius: var(--round-sm);
 		box-shadow: var(--elevation-2);
-		padding: var(--space-1) 0;
+		padding: var(--space-1);
 		display: flex;
 		flex-direction: column;
 		transform: translate(var(--x), var(--y));

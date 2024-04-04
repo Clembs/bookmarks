@@ -5,16 +5,20 @@
 	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
 	import { YOUTUBE_VIDEO_REGEX } from '$lib/validation';
 	import type { createNavigation } from '$lib/helpers/navigation.svelte';
-	import { clickoutside } from '@svelte-put/clickoutside';
 
-	let { bookmark, active, navigation, ...mouseEvents } = $props<{
+	let {
+		bookmark,
+		active,
+		navigation,
+		...mouseEvents
+	}: {
 		bookmark: Bookmark;
 		active?: boolean;
 		navigation: ReturnType<typeof createNavigation>;
 		oncontextmenu?: (ev: MouseEvent) => void;
 		onmouseenter?: (ev: MouseEvent) => void;
 		onmouseleave?: (ev: MouseEvent) => void;
-	}>();
+	} = $props();
 
 	let textFieldEl = $state<HTMLInputElement>();
 	let newTitle = $state(bookmark.raw.title!);
@@ -174,11 +178,13 @@
 {/if}
 
 <style lang="scss">
+	@import '../../styles/vars.scss';
+
 	.bookmark {
-		border-radius: var(--round-sm);
-		padding: var(--space-2) var(--space-3);
+		border-radius: var(--round-md);
+		padding: var(--space-2);
 		display: flex;
-		flex-direction: column;
+		// flex-direction: column;
 		gap: var(--space-2);
 		width: 100%;
 
@@ -263,8 +269,11 @@
 			border-radius: var(--round-xsm);
 			width: 100%;
 			height: 100%;
-			max-width: 200px;
-			margin-left: var(--space-8);
+			max-width: 100px;
+
+			@media (max-width: $compact) {
+				display: none;
+			}
 		}
 
 		// &:hover,

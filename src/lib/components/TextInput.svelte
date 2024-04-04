@@ -1,12 +1,12 @@
 <script lang="ts">
 	let {
-		el,
+		el = $bindable(),
 		type = 'text',
 		required = true,
 		placeholder = '',
 		disabled = false,
 		readonly = false,
-		value = '',
+		value = $bindable(''),
 		maxlength,
 		minlength,
 		multiline = false,
@@ -16,7 +16,7 @@
 		autofocus = false,
 		error = '',
 		...everythingElse
-	} = $props<{
+	}: {
 		el?: HTMLInputElement | HTMLTextAreaElement;
 		type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url';
 		required?: boolean;
@@ -32,7 +32,7 @@
 		height?: string;
 		autofocus?: boolean;
 		error?: string;
-	}>();
+	} = $props();
 </script>
 
 <div class="text-input">
@@ -89,7 +89,6 @@
 	.text-input {
 		text-align: left;
 		position: relative;
-		margin-bottom: 1rem;
 
 		label {
 			position: absolute;
@@ -111,12 +110,12 @@
 		textarea {
 			// height: 56px;
 			width: 100%;
-			padding: 1rem;
+			padding: var(--space-4);
 			font-size: 1rem;
 			border-radius: var(--round-md);
 			border: none;
-			outline: 1px solid var(--color-outline);
-			background: var(--color-surface);
+			outline: 1px solid var(--color-outline-variant);
+			background-color: inherit;
 			color: var(--color-on-surface);
 			font-family: var(--fonts-body);
 
