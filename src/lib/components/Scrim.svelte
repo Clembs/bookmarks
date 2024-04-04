@@ -1,16 +1,18 @@
 <script lang="ts">
-	let { onclose } = $props<{
-		onclose: () => void;
+	let { onclose, id } = $props<{
+		id: string;
+		onclose?: () => void;
 	}>();
 </script>
 
 <div
+	{id}
 	aria-hidden="true"
 	onclick={onclose}
 	onkeydown={(ev) => {
 		console.log(ev.key);
 		if (ev.key === 'Escape') {
-			onclose();
+			onclose?.();
 		}
 	}}
 	class="scrim"

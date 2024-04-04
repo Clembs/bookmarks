@@ -72,6 +72,7 @@
 {/snippet}
 
 <Scrim
+	id="context-menu-scrim"
 	onclose={() => {
 		console.log('onclose');
 		closeMenu();
@@ -166,7 +167,7 @@
 	}
 
 	@media (min-width: $compact) {
-		:global(.scrim) {
+		#context-menu-scrim {
 			display: none;
 		}
 	}
