@@ -175,7 +175,7 @@
 
 <style lang="scss">
 	.bookmark {
-		border-radius: var(--round-xsm);
+		border-radius: var(--round-sm);
 		padding: var(--space-2) var(--space-3);
 		display: flex;
 		flex-direction: column;

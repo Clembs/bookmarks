@@ -23,7 +23,7 @@
 </script>
 
 {#if href && !disabled}
-	<a {href} {onsubmit} {onclick} {type} class={style} class:inline class:icon>
+	<a {href} {onsubmit} {onclick} class={style} class:inline class:icon>
 		{@render children()}
 	</a>
 {:else}
@@ -33,10 +33,11 @@
 {/if}
 
 <style lang="scss">
+	a,
 	button {
-		padding: var(--space-2) var(--space-6);
-		height: var(--space-10);
-		border-radius: var(--round-full);
+		padding: var(--space-3) var(--space-5);
+		// height: var(--space-10);
+		border-radius: var(--round-md);
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -63,7 +64,7 @@
 		}
 
 		&.text {
-			padding: 0 var(--space-3);
+			// padding: 0 var(--space-3);
 			background-color: transparent;
 			color: var(--color-primary);
 
@@ -77,6 +78,7 @@
 		}
 
 		&.icon {
+			height: var(--space-10);
 			width: var(--space-10);
 			padding: 0;
 

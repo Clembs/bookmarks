@@ -15,7 +15,9 @@
 	<TextInput label="Display name" type="text" name="display-name" required />
 	<TextInput label="Password" type="password" name="password" required />
 	<TextInput label="Confirm Password" type="password" name="confirm-password" required />
-	<Button type="submit">Create an account</Button>
-</form>
 
-<a href="/login">Log into an existing account</a>
+	<div class="buttons">
+		<Button style="text" type="button" href="/login">Log into an existing account</Button>
+		<Button type="submit">Create an account</Button>
+	</div>
+</form>

@@ -151,7 +151,7 @@
 
 			@media (max-width: $compact) {
 				padding: var(--space-4) var(--space-4);
-				border-radius: 0;
+				border-radius: var(--round-lg);
 			}
 		}
 
@@ -162,12 +162,12 @@
 			top: auto;
 			max-width: 100%;
 			border-radius: var(--round-xlg) var(--round-xlg) 0 0;
-			padding: var(--space-6) 0;
+			padding: var(--space-4) var(--space-3);
 		}
 	}
 
 	@media (min-width: $compact) {
-		#context-menu-scrim {
+		:global(#context-menu-scrim) {
 			display: none;
 		}
 	}

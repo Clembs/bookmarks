@@ -13,6 +13,7 @@
 		name = '',
 		label = '',
 		height = '200px',
+		autofocus = false,
 		error = '',
 		...everythingElse
 	} = $props<{
@@ -29,6 +30,7 @@
 		name?: string;
 		label?: string;
 		height?: string;
+		autofocus?: boolean;
 		error?: string;
 	}>();
 </script>
@@ -50,6 +52,7 @@
 			{readonly}
 			{required}
 			{name}
+			{autofocus}
 			id={name}
 			{...everythingElse}
 		/>
@@ -69,6 +72,7 @@
 			{readonly}
 			{required}
 			{name}
+			{autofocus}
 			id={name}
 			{...everythingElse}
 		/>
@@ -109,7 +113,7 @@
 			width: 100%;
 			padding: 1rem;
 			font-size: 1rem;
-			border-radius: var(--round-xsm);
+			border-radius: var(--round-md);
 			border: none;
 			outline: 1px solid var(--color-outline);
 			background: var(--color-surface);

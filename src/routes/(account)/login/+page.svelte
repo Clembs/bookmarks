@@ -4,12 +4,13 @@
 	import Button from '$lib/components/Button.svelte';
 </script>
 
-<h1>Login</h1>
+<h1>Login to Bookmarks</h1>
 
-<form method="post" use:enhance class="flex col">
+<form method="post" use:enhance>
 	<TextInput label="Email" type="email" name="email" required />
 	<TextInput label="Password" type="password" name="password" required />
-	<Button type="submit">Log in</Button>
+	<div class="buttons">
+		<Button style="text" type="button" href="/register">Register a new account</Button>
+		<Button type="submit">Log in</Button>
+	</div>
 </form>
-
-<a href="/register">Register a new account</a>
