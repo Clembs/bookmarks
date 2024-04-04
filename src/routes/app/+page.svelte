@@ -39,73 +39,72 @@
 	}}
 />
 
-<h1>Bookmarks</h1>
+<header>
+	<h1>All bookmarks</h1>
 
-<form
-	id="add-bookmark"
-	method="post"
-	bind:this={form}
-	use:enhance={() => {
-		console.log("h");
-		// optimistic update
-		data.bookmarks.push({
-			title: value,
-			value,
-			partial: true,
-		});
-
-		return async ({ result, update }) => {
-			// data.bookmarks.pop();
-
-			if (result.type === "failure" && result.data?.message) {
-				error = result.data.message as string;
+	<form
+		id="add-bookmark"
+		method="post"
+		bind:this={form}
+		use:enhance={() => {
+			console.log("h");
+			// optimistic update
+			data.bookmarks.push({
+				title: value,
+				value,
+				partial: true,
+			});
+	
+			return async ({ result, update }) => {
+				// data.bookmarks.pop();
+	
+				if (result.type === "failure" && result.data?.message) {
+					error = result.data.message as string;
+				}
+				
+				// if (result.type === "success" && result.data?.bookmark) {
+					// data.bookmarks.push(
+					// 	result.data.bookmark as RawBookmark
+					// );
+				// }
+				return await update();
 			}
-			
-			// if (result.type === "success" && result.data?.bookmark) {
-				// data.bookmarks.push(
-				// 	result.data.bookmark as RawBookmark
-				// );
-			// }
-			return await update();
-		}
-	}}
->
-	<TextInput
-		type="text"
-		bind:error
-		bind:value
-		bind:el={textInput}
-		name="raw"
-		placeholder="Add a URL, a color, code, or whatever else..."
-	/>
-</form>
+		}}
+	>
+		<!-- bind:error -->
+		<TextInput
+			type="text"
+			bind:value
+			bind:el={textInput}
+			name="raw"
+			placeholder="Add a URL, a color, code, or whatever else..."
+		/>
+	</form>
+</header>
 
 <BookmarkList {bookmarks} />
 
 <style lang="scss">
 	@import '../../styles/vars.scss';
 
-	h1 {
-		margin-bottom: 0;
-	}
+	header {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: var(--space-4);
 
-	form {
-		position: sticky;
-		top: 0;
-		left: 0;
-		z-index: 1;
-		padding-top: var(--space-4);
-		// box-shadow: var(--elevation-2);
-		background-color: var(--color-surface);
+		h1 {
+			margin-bottom: 0;
+		}
 
-		@media (max-width: $compact) {
-			position: fixed;
-			width: 100%;
-			top: auto;
-			bottom: 0;
-			padding: 0 var(--space-4);
+		form {
+			position: sticky;
+			top: 0;
+			left: 0;
+			z-index: 1;
+			padding-top: var(--space-4);
 		}
 	}
+
 	ul {
 		display: flex;
 		flex-direction: column;
