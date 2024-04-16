@@ -46,6 +46,7 @@ export const categories = pgTable('categories', {
 		.notNull()
 		.references(() => users.id),
 	name: text('name').notNull(),
+	keywords: text('keywords').array(),
 	createdAt: timestamp('created_at').notNull().defaultNow(),
 	updatedAt: timestamp('updated_at').notNull().defaultNow()
 });
