@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { Settings, Add } from 'svelte-google-materialdesign-icons';
+	import Dialog from '$lib/components/Dialog.svelte';
+	import TextInput from '$lib/components/TextInput.svelte';
 
 	let { isSidebarOpen = $bindable(false) } = $props();
 	let isCreationModalOpen = $state(false);
@@ -12,27 +14,26 @@
 	});
 </script>
 
-{#if isCreationModalOpen}
-	<Dialog
-		showModal
-		headline="Create category"
-		actions={[
-			{
-				label: 'Cancel',
-				action: () => (isCreationModalOpen = false)
-			},
-			{
-				label: 'Create',
-				action: 'submit'
-			}
-		]}
-		onclose={() => (isCreationModalOpen = false)}
-	>
-		<form method="post" action="/api/category?">
-			<TextInput name="name" label="Name" required autofocus />
-		</form>
-	</Dialog>
-{/if}
+<Dialog
+	bind:showModal={isCreationModalOpen}
+	headline="Create category"
+	actions={[
+		{
+			label: 'Cancel',
+			action: () => (isCreationModalOpen = false)
+		},
+		{
+			label: 'Create',
+			action: 'submit',
+			type: 'filled'
+		}
+	]}
+	onclose={() => (isCreationModalOpen = false)}
+>
+	<form method="post" action="/api/category?">
+		<TextInput name="name" label="Name" required autofocus />
+	</form>
+</Dialog>
 
 <svelte:window
 	onresize={(ev) => {
