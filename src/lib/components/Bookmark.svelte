@@ -215,11 +215,10 @@
 			width: 100%;
 
 			&-title {
-				// max width 50ch, otherwise ellipsis, wrap on word
 				overflow: hidden;
 				text-overflow: ellipsis;
-				white-space: nowrap;
-				max-width: 40ch;
+				// white-space: nowrap;
+				// max-width: 80%;
 				word-wrap: break-word;
 			}
 
@@ -270,6 +269,7 @@
 			width: 100%;
 			height: 100%;
 			max-width: 100px;
+			flex-shrink: 0;
 
 			@media (max-width: $compact) {
 				display: none;
