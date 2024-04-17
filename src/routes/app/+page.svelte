@@ -5,16 +5,20 @@
 
 	const { data } = $props();
 
-	let bookmarks = $state(new Bookmarks(data.bookmarks));
+	let value = $state('');
+
+	let bookmarks = $derived(new Bookmarks(data.bookmarks));
 </script>
 
 <header>
 	<h1>All saves</h1>
 
-	<BookmarkInput {bookmarks} />
+	<BookmarkInput {bookmarks} bind:value />
 </header>
 
-<BookmarkList {bookmarks} />
+<BookmarkList
+	bookmarks={value.length >= 2 ? bookmarks.filter((bm) => bm.raw.title?.toLowerCase()?.includes(value.toLowerCase())!) : bookmarks}
+/>
 
 <style lang="scss">
 	@import '../../styles/vars.scss';

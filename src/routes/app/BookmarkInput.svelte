@@ -6,10 +6,15 @@
 
 	let error = $state('');
 	let textInput = $state<HTMLInputElement | undefined>();
-	let value = $state('');
 	let form = $state<HTMLFormElement | undefined>();
 
-	let { bookmarks = $bindable() }: { bookmarks: Bookmarks } = $props();
+	let {
+		bookmarks,
+		value = $bindable('')
+	}: {
+		bookmarks: Bookmarks;
+		value: string;
+	} = $props();
 </script>
 
 <svelte:window
@@ -53,7 +58,7 @@
 			if (result.type === "success" && result.data?.bookmark) {
         bookmarks.push(
           result.data.bookmark as RawBookmark
-			);
+				);
 			}
 			return await update();
 		};

@@ -22,7 +22,7 @@ export class Bookmark {
 				})
 			});
 
-			await invalidate('bookmarks').then(() => console.log('updated'));
+			await invalidate('bookmarks').then(() => console.log(`updated ${this.raw.id}`));
 
 			return req.ok;
 		} catch (error) {
@@ -37,7 +37,7 @@ export class Bookmark {
 				method: 'DELETE'
 			});
 
-			await invalidate('bookmarks').then(() => console.log('updated'));
+			await invalidate('bookmarks').then(() => console.log(`deleted ${this.raw.id}`));
 
 			return req.ok;
 		} catch (error) {
@@ -59,8 +59,8 @@ export class Bookmark {
 export class Bookmarks {
 	private bookmarks: Bookmark[] = [];
 
-	constructor(rawBookmarks: RawBookmark[]) {
-		this.bookmarks = rawBookmarks.map((bm) => new Bookmark(bm));
+	constructor(rawBookmarks: (RawBookmark | Bookmark)[]) {
+		this.bookmarks = rawBookmarks.map((bm) => (bm instanceof Bookmark ? bm : new Bookmark(bm)));
 	}
 
 	get all() {
@@ -73,6 +73,7 @@ export class Bookmarks {
 
 	push(newBookmark: RawBookmark) {
 		this.bookmarks.push(new Bookmark(newBookmark));
+		invalidate('bookmarks').then(() => console.log('pushed bookmark'));
 	}
 
 	remove(id: string) {
@@ -93,5 +94,9 @@ export class Bookmarks {
 
 	at(index: number) {
 		return this.bookmarks[index];
+	}
+
+	filter(fn: (bm: Bookmark) => boolean) {
+		return new Bookmarks(this.bookmarks.filter(fn));
 	}
 }
