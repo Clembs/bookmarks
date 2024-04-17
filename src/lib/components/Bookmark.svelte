@@ -184,9 +184,14 @@
 		border-radius: var(--round-md);
 		padding: var(--space-2);
 		display: flex;
-		// flex-direction: column;
 		gap: var(--space-2);
 		width: 100%;
+		transition: background-color var(--transition-in-out-standard);
+
+		@media (max-width: $compact) {
+			padding: var(--space-3);
+			gap: var(--space-3);
+		}
 
 		&-content {
 			display: flex;

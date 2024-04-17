@@ -20,12 +20,16 @@
 	@import '../../styles/vars.scss';
 
 	header {
-		display: flex;
-		flex-direction: column;
-		margin-bottom: var(--space-4);
+		// display: flex;
+		// flex-direction: column;
 
 		h1 {
+			margin: 0 var(--space-4);
 			margin-bottom: 0;
+
+			@media (max-width: $compact) {
+				margin: var(--space-4) 0;
+			}
 		}
 	}
 </style>

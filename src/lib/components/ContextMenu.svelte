@@ -124,7 +124,7 @@
 		max-width: 280px;
 		background-color: var(--color-surface-container);
 		color: var(--color-on-surface);
-		border-radius: var(--round-sm);
+		border-radius: var(--round-md);
 		box-shadow: var(--elevation-2);
 		padding: var(--space-1);
 		display: flex;
@@ -139,14 +139,19 @@
 			gap: var(--space-6);
 			width: 100%;
 			padding: var(--space-2) var(--space-3);
-			border-radius: var(--round-xsm);
+			border-radius: var(--round-sm);
 			cursor: pointer;
 			text-align: left;
 			outline: none;
+			transition: scale var(--transition-in-out-standard), background-color var(--transition-in-out-standard);
 
 			&:hover,
 			&:focus-within {
 				background-color: var(--color-surface-container-highest);
+			}
+
+			&:hover:active {
+				scale: 0.98;
 			}
 
 			@media (max-width: $compact) {
