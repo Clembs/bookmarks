@@ -1,25 +1,19 @@
 import { db } from '$lib/db';
-import type { RawBookmark } from '$lib/db/types';
 import { redirect } from '@sveltejs/kit';
 
-export async function load({ locals: { getSession }, depends }) {
+export async function load({ locals: { getSession }, request }) {
 	const session = await getSession();
 	if (!session) throw redirect(302, '/login');
 
-	const [userData] = await db.query.users.findMany({
-		where: ({ id }, { eq }) => eq(id, session.userId),
-		with: {
-			bookmarks: {
-				orderBy: ({ createdAt }, { desc }) => desc(createdAt)
-			},
-			categories: true
-		}
+	const categories = await db.query.categories.findMany({
+		where: ({ userId }, { eq }) => eq(userId, session.userId)
 	});
 
-	depends('bookmarks');
+	const isMobile = request.headers.get('user-agent')?.includes('Mobile');
 
 	return {
-		bookmarks: userData.bookmarks as RawBookmark[],
-		categories: userData.categories
+		categories,
+		isMobile,
+		session
 	};
 }

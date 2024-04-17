@@ -4,7 +4,7 @@
 	import Dialog from '$lib/components/Dialog.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
 
-	let { isSidebarOpen = $bindable(false) } = $props();
+	let { isSidebarOpen = $bindable() } = $props();
 	let isCreationModalOpen = $state(false);
 
 	$effect(() => {
@@ -45,10 +45,10 @@
 
 <div id="sidebar-wrapper" data-active={isSidebarOpen}>
 	<aside>
-		<div id="title">Bookmarks</div>
+		<div id="title">saveit</div>
 
 		<ul id="top-items">
-			<a class="item" data-active={$page.url.pathname === '/app'} href="/app">All bookmarks</a>
+			<a class="item" data-active={$page.url.pathname === '/app'} href="/app">All saves</a>
 			{#each $page.data.categories as category (category.id)}
 				<a
 					class="item"
@@ -59,14 +59,14 @@
 				</a>
 			{/each}
 			<button class="item" onclick={() => (isCreationModalOpen = true)}>
-				<Add size="24" />
-				Create category
+				<Add size="20" />
+				Create folder
 			</button>
 		</ul>
 
 		<ul id="bottom-items">
 			<a class="item" href="/settings">
-				<Settings size="24" />
+				<Settings size="20" />
 				Settings
 			</a>
 		</ul>
@@ -140,7 +140,7 @@
 				text-overflow: ellipsis;
 				text-wrap: nowrap;
 				white-space: nowrap;
-				gap: var(--space-4);
+				gap: var(--space-3);
 				padding: var(--space-3) var(--space-4);
 				border-radius: var(--round-md);
 				color: var(--color-on-surface-variant);
