@@ -9,7 +9,7 @@
 		disabled = false,
 		onclick,
 		onsubmit
-	} = $props<{
+	}: {
 		href?: string;
 		style?: 'filled' | 'filled-tonal' | 'outline' | 'text';
 		children?: any;
@@ -19,7 +19,7 @@
 		disabled?: boolean;
 		onclick?: (event: MouseEvent) => void;
 		onsubmit?: (event: Event) => void;
-	}>();
+	} = $props();
 </script>
 
 {#if href && !disabled}
@@ -42,18 +42,22 @@
 		align-items: center;
 		justify-content: center;
 		gap: var(--space-2);
-		transition: box-shadow 0.2s ease;
+		transition: box-shadow var(--transition-in-out-standard), background-color var(--transition-in-out-standard), transform var(--transition-in-out-standard), scale var(--transition-in-out-standard);
 		user-select: none;
 
 		&.inline {
 			width: fit-content;
 		}
 
+		&:active {
+			scale: 0.98;
+		}
+
 		&.filled {
 			background-color: var(--color-primary);
 			color: var(--color-on-primary);
 
-			&:hover {
+			&:hover, &:active, &:focus {
 				box-shadow: var(--elevation-1);
 			}
 
@@ -68,7 +72,7 @@
 			background-color: transparent;
 			color: var(--color-primary);
 
-			&:hover {
+			&:hover, &:active, &:focus {
 				background-color: var(--color-surface-container-highest);
 			}
 		}

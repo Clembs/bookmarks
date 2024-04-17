@@ -22,6 +22,7 @@ export async function createUrlBookmark(
 			userId: userId
 		})
 		.returning();
+
 	return newBookmark;
 }
 

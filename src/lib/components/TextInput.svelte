@@ -114,7 +114,7 @@
 			font-size: 1rem;
 			border-radius: var(--round-md);
 			border: none;
-			outline: 1px solid var(--color-outline-variant);
+			outline: 2px solid var(--color-surface-container-highest);
 			background-color: inherit;
 			color: var(--color-on-surface);
 			font-family: var(--fonts-body);
