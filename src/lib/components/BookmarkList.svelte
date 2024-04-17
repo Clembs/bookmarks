@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { Bookmark } from '$lib/helpers/bookmark.svelte';
+	import type { Bookmark, Bookmarks } from '$lib/helpers/bookmark.svelte';
 	import autoAnimate from '@formkit/auto-animate';
 	import BookmarkComponent from '$lib/components/Bookmark.svelte';
-	import { getBookmarkContextMenuItems } from '../../routes/app/helpers';
 	import { handleKeyboardShortcut } from '$lib/helpers/keyboard/handler';
 	import { getBookmarkKbdActions } from '$lib/helpers/keyboard/bookmark';
 	import ContextMenu from './ContextMenu.svelte';
 	import { createNavigation } from '$lib/helpers/navigation.svelte';
+	import { getBookmarkContextMenuItems } from '$lib/helpers/context-menu/bookmarks';
 
 	let currentBookmark = $state<Bookmark | undefined>();
 	let navigation = createNavigation();
@@ -15,6 +15,12 @@
 	let x = $state(0);
 	let y = $state(0);
 	let listEl = $state<HTMLUListElement>();
+
+	let {
+		bookmarks = $bindable()
+	}: {
+		bookmarks: Bookmarks;
+	} = $props();
 
 	function showContextMenu(ev: MouseEvent, bookmark: Bookmark) {
 		if (contextMenuVisible) {
@@ -48,12 +54,6 @@
 		contextMenuVisible = true;
 	}
 
-	let { bookmarks } = $props<{
-		bookmarks: Bookmark[];
-	}>();
-
-	$inspect(navigation.state);
-
 	function useMouse(cb: (x: MouseEvent) => void) {
 		return (ev: MouseEvent) => {
 			if (contextMenuVisible) return;
@@ -75,16 +75,16 @@
 			ev.preventDefault();
 			navigation.setState('keyboard');
 
-			const index = bookmarks.findIndex((b) => b.raw.id === currentBookmark?.raw.id);
+			const index = bookmarks.findIndex(currentBookmark?.raw.id);
 			let newIndex = index;
 
 			if (ev.key === 'ArrowDown' && index < bookmarks.length - 1) {
 				newIndex++;
-				currentBookmark = bookmarks[newIndex];
+				currentBookmark = bookmarks.at(newIndex);
 			}
 			if (ev.key === 'ArrowUp' && index > 0) {
 				newIndex--;
-				currentBookmark = bookmarks[newIndex];
+				currentBookmark = bookmarks.at(newIndex);
 			}
 
 			const bmEl = listEl?.children[newIndex];
@@ -122,7 +122,7 @@
 {/if}
 
 <ul use:autoAnimate bind:this={listEl}>
-	{#each bookmarks as bookmark (bookmark.raw.id)}
+	{#each bookmarks.all as bookmark (bookmark.raw.id)}
 		<BookmarkComponent
 			active={currentBookmark && currentBookmark.raw.id === bookmark.raw.id}
 			{navigation}
@@ -138,6 +138,7 @@
 	@import '../../styles/vars.scss';
 
 	ul {
+		margin: 0 var(--space-2);
 		@media (max-width: $compact) {
 			margin-bottom: 4rem;
 		}

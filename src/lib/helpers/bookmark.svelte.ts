@@ -55,3 +55,43 @@ export class Bookmark {
 	}
 	setLoading = (newState: boolean) => (this.bmIsLoading = newState);
 }
+
+export class Bookmarks {
+	private bookmarks: Bookmark[] = [];
+
+	constructor(rawBookmarks: RawBookmark[]) {
+		this.bookmarks = rawBookmarks.map((bm) => new Bookmark(bm));
+	}
+
+	get all() {
+		return this.bookmarks;
+	}
+
+	get length() {
+		return this.bookmarks.length;
+	}
+
+	push(newBookmark: RawBookmark) {
+		this.bookmarks.push(new Bookmark(newBookmark));
+	}
+
+	remove(id: string) {
+		this.bookmarks = this.bookmarks.filter((bm) => bm.raw.id !== id);
+	}
+
+	find(id: string | undefined) {
+		return this.bookmarks.find((bm) => bm.raw.id === id);
+	}
+
+	findIndex(id: string | undefined) {
+		return this.bookmarks.findIndex((bm) => bm.raw.id === id);
+	}
+
+	pop() {
+		return this.bookmarks.pop();
+	}
+
+	at(index: number) {
+		return this.bookmarks[index];
+	}
+}

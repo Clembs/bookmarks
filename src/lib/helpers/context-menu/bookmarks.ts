@@ -1,6 +1,5 @@
 import { urlTypeBookmarks, type Bookmark } from '$lib/helpers/bookmark.svelte';
-import { Delete, Edit, Open_in_new } from 'svelte-google-materialdesign-icons';
-import ContentCopy from 'svelte-google-materialdesign-icons/Content_copy.svelte';
+import { Delete, Edit, Open_in_new, Content_copy } from 'svelte-google-materialdesign-icons';
 
 export function getBookmarkContextMenuItems(bookmark: Bookmark) {
 	const items = [];
@@ -26,7 +25,7 @@ export function getBookmarkContextMenuItems(bookmark: Bookmark) {
 		items.push({
 			label: urlTypeBookmarks.includes(bookmark.raw.type) ? 'Copy URL' : 'Copy as text',
 			action: () => navigator.clipboard.writeText(bookmark.raw.value!),
-			icon: ContentCopy,
+			icon: Content_copy,
 			shortcut: 'Ctrl+C'
 		});
 	}
