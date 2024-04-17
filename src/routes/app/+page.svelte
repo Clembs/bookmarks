@@ -27,19 +27,5 @@
 		h1 {
 			margin-bottom: 0;
 		}
-
-		form {
-			position: sticky;
-			top: 0;
-			left: 0;
-			z-index: 1;
-			padding-top: var(--space-4);
-		}
-	}
-
-	ul {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-1);
 	}
 </style>

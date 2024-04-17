@@ -63,7 +63,7 @@
 
 			main {
 				position: relative;
-				padding: var(--space-2);
+				padding: var(--space-4);
 				max-width: 700px;
 				margin: 0 auto;
 			}

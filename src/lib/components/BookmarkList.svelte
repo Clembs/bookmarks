@@ -139,8 +139,10 @@
 
 	ul {
 		margin: 0 var(--space-2);
+
 		@media (max-width: $compact) {
-			margin-bottom: 4rem;
+			margin: calc(0px - var(--space-2));
+			margin-bottom: 5rem;
 		}
 	}
 </style>
