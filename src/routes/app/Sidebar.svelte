@@ -100,6 +100,11 @@
 			transition: min-width var(--transition-exit-screen-emphasized);
 			// will-change: min-width;
 		}
+
+		@media (max-width: $compact) {
+			min-width: 0;
+			padding: 0;
+		}
 	}
 
 	aside {
