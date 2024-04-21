@@ -1,5 +1,5 @@
 import { urlTypeBookmarks, type Bookmark } from '$lib/helpers/bookmark.svelte';
-import { Delete, Edit, Open_in_new, Content_copy } from 'svelte-google-materialdesign-icons';
+import { ArrowSquareOut, Copy, PencilSimple, TrashSimple } from 'phosphor-svelte';
 
 export function getBookmarkContextMenuItems(bookmark: Bookmark) {
 	const items = [];
@@ -8,7 +8,7 @@ export function getBookmarkContextMenuItems(bookmark: Bookmark) {
 		items.push({
 			label: 'Open URL',
 			action: bookmark.raw.value!,
-			icon: Open_in_new,
+			icon: ArrowSquareOut,
 			shortcut: 'Enter'
 		});
 	}
@@ -17,7 +17,7 @@ export function getBookmarkContextMenuItems(bookmark: Bookmark) {
 		items.push({
 			label: 'Open Channel',
 			action: bookmark.raw.metadata.authorUrl,
-			icon: Open_in_new
+			icon: ArrowSquareOut
 		});
 	}
 
@@ -25,7 +25,7 @@ export function getBookmarkContextMenuItems(bookmark: Bookmark) {
 		items.push({
 			label: urlTypeBookmarks.includes(bookmark.raw.type) ? 'Copy URL' : 'Copy as text',
 			action: () => navigator.clipboard.writeText(bookmark.raw.value!),
-			icon: Content_copy,
+			icon: Copy,
 			shortcut: 'Ctrl+C'
 		});
 	}
@@ -37,13 +37,13 @@ export function getBookmarkContextMenuItems(bookmark: Bookmark) {
 			action() {
 				bookmark.setRenaming(true);
 			},
-			icon: Edit,
+			icon: PencilSimple,
 			shortcut: 'F2'
 		},
 		{
 			label: 'Delete',
 			action: () => bookmark.delete(),
-			icon: Delete,
+			icon: TrashSimple,
 			shortcut: 'Del'
 		}
 	];
