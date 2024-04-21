@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
-	import { Menu, Menu_open } from 'svelte-google-materialdesign-icons';
+	import { List, TextOutdent } from 'phosphor-svelte';
 	import Sidebar from './Sidebar.svelte';
 
 	let { children, data } = $props();
@@ -21,9 +21,9 @@
 				}}
 			>
 			{#if isSidebarOpen}
-				<Menu_open />
+				<TextOutdent />
 			{:else}
-				<Menu />
+				<List />
 			{/if}
 			</Button>
 		</div>

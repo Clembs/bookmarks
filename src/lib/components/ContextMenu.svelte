@@ -62,7 +62,7 @@
 		{#if loadingMenuItem === item.label}
 			<IndeterminateProgressSpinner />
 		{:else if item.icon}
-			<svelte:component this={item.icon} variation="filled" size={18} />
+			<svelte:component this={item.icon} weight="fill" size={18} />
 		{/if}
 		{item.label}
 	</div>

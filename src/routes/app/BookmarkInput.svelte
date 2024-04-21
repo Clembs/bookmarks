@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import type { RawBookmark } from '$lib/db/types';
 	import { Bookmarks } from '$lib/helpers/bookmark.svelte';
-	import { Add } from 'svelte-google-materialdesign-icons';
+	import { Plus } from 'phosphor-svelte';
 
 	let error = $state('');
 	let textInput = $state<HTMLInputElement | undefined>();
@@ -72,8 +72,8 @@
 			name="raw"
 			placeholder="Search a save or add to your saves"
 		/>
-		<button type="submit">
-			<Add />
+		<button disabled={!value} type="submit">
+			<Plus />
 		</button>
 	</div>
 </form>
@@ -83,25 +83,35 @@
 
 	form {
 		.main-input {
+			position: relative;
 			display: flex;
 			border: 1px solid var(--color-outline);
 			background-color: var(--color-surface);
 			border-radius: var(--round-full);
 			margin: var(--space-4) 0;
+			height: calc(var(--space-10) + var(--space-4));
+			overflow: hidden;
 
 			input {
 				flex: 1;
 				padding: var(--space-4);
 				border: none;
 				outline: none;
-				border-radius: var(--round-full) 0 0 var(--round-full);
+				border-radius: var(--round-full);
 				background-color: transparent;
 				font: inherit;
+				color: var(--color-on-surface);
 			}
 
 			button {
 				display: grid;
 				place-items: center;
+				position: absolute;
+				top: 0;
+				// transform: translateY(-50%);
+				right: 0px;
+				transition: right var(--transition-enter-screen-standard);
+
 				width: var(--space-10);
 				height: var(--space-10);
 				border: none;
@@ -109,6 +119,13 @@
 				color: var(--color-on-primary);
 				border-radius: var(--round-full);
 				margin: var(--space-2);
+
+				&:disabled {
+					background-color: var(--color-surface-dim);
+					color: var(--color-on-surface-variant);
+					right: -100%;
+					transition: right var(--transition-exit-screen-standard);
+				}
 			}
 		}
 

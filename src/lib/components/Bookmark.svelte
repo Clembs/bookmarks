@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { type Bookmark, urlTypeBookmarks, copyTypeBookmarks } from '$lib/helpers/bookmark.svelte';
 	import { trimUrl } from '$lib/helpers/trimUrl';
-	import { Text_snippet } from 'svelte-google-materialdesign-icons';
 	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
 	import { YOUTUBE_VIDEO_REGEX } from '$lib/validation';
 	import type { createNavigation } from '$lib/helpers/navigation.svelte';
+	import { TextAlignLeft } from 'phosphor-svelte';
 
 	let {
 		bookmark,
@@ -74,7 +74,7 @@
 				/>
 			{:else}
 				<div class="bookmark-icon">
-					<Text_snippet />
+					<TextAlignLeft />
 				</div>
 			{/if}
 

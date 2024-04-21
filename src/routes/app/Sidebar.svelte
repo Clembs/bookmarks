@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { Settings, Add } from 'svelte-google-materialdesign-icons';
 	import Dialog from '$lib/components/Dialog.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
+	import { GearSix, Plus } from 'phosphor-svelte';
 
 	let { isSidebarOpen = $bindable() } = $props();
 	let isCreationModalOpen = $state(false);
@@ -59,14 +59,14 @@
 				</a>
 			{/each}
 			<button class="item" onclick={() => (isCreationModalOpen = true)}>
-				<Add size="20" />
+				<Plus size="20" />
 				Create folder
 			</button>
 		</ul>
 
 		<ul id="bottom-items">
 			<a class="item" href="/settings">
-				<Settings size="20" />
+				<GearSix size="20" />
 				Settings
 			</a>
 		</ul>
