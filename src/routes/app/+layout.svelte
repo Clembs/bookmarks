@@ -11,7 +11,7 @@
 <div id="layout">
 	<Sidebar bind:isSidebarOpen />
 
-	<div id="scrollable-wrapper">
+	<div id="scrollable-wrapper" tabindex="-1">
 		<div id="menu-btn">
 			<Button
 				style="text"
