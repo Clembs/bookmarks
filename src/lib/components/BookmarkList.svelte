@@ -7,6 +7,7 @@
 	import ContextMenu from './ContextMenu.svelte';
 	import { createNavigation } from '$lib/helpers/navigation.svelte';
 	import { getBookmarkContextMenuItems } from '$lib/helpers/context-menu/bookmarks';
+	import { Plus } from 'phosphor-svelte';
 
 	let currentBookmark = $state<Bookmark | undefined>();
 	let navigation = createNavigation();
@@ -122,16 +123,28 @@
 {/if}
 
 <ul use:autoAnimate bind:this={listEl}>
-	{#each bookmarks.all as bookmark (bookmark.raw.id)}
-		<BookmarkComponent
-			active={currentBookmark && currentBookmark.raw.id === bookmark.raw.id}
-			{navigation}
-			{bookmark}
-			onmouseenter={useMouse(() => (currentBookmark = bookmark))}
-			onmouseleave={useMouse(() => (currentBookmark = undefined))}
-			oncontextmenu={useMouse((ev) => showContextMenu(ev, bookmark))}
-		/>
-	{/each}
+	{#if bookmarks.length}
+		{#each bookmarks.all as bookmark (bookmark.raw.id)}
+			<BookmarkComponent
+				active={currentBookmark && currentBookmark.raw.id === bookmark.raw.id}
+				{navigation}
+				{bookmark}
+				onmouseenter={useMouse(() => (currentBookmark = bookmark))}
+				onmouseleave={useMouse(() => (currentBookmark = undefined))}
+				oncontextmenu={useMouse((ev) => showContextMenu(ev, bookmark))}
+			/>
+		{/each}
+	{:else}
+		<button
+			on:click={() => {
+			const form = document.getElementById('add-bookmark') as HTMLFormElement;
+			form.requestSubmit();
+		}}
+			id="add-to-saves"
+		>
+			<Plus /> Add to saves
+		</button>
+	{/if}
 </ul>
 
 <style lang="scss">
@@ -143,6 +156,20 @@
 		@media (max-width: $compact) {
 			margin: calc(0px - var(--space-2));
 			margin-bottom: 5rem;
+		}
+	}
+
+	#add-to-saves {
+		display: flex;
+		border-radius: var(--round-md);
+		padding: var(--space-2);
+		display: flex;
+		gap: var(--space-2);
+		width: 100%;
+		transition: background-color var(--transition-in-out-standard);
+
+		&:hover {
+			background-color: var(--color-surface-container);
 		}
 	}
 </style>
