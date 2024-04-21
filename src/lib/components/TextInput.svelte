@@ -35,7 +35,10 @@
 	} = $props();
 </script>
 
-<div class="text-input">
+<label for={name}>
+	<span class="label">
+		{label}
+	</span>
 	{#if multiline}
 		<textarea
 			style:--height={height}
@@ -77,40 +80,28 @@
 			{...everythingElse}
 		/>
 	{/if}
-	{#if label}
-		<label for={name}>{label}</label>
-	{/if}
 	{#if error}
 		<span class="text-input-error">{error}</span>
 	{/if}
-</div>
+</label>
 
 <style lang="scss">
-	.text-input {
+	label {
 		text-align: left;
-		position: relative;
+		display: flex;
+		flex-direction: column;
 
-		label {
-			position: absolute;
-			left: 1rem;
-			top: 50%;
-			transform: translateY(-50%);
+		.label {
 			color: var(--color-on-surface-variant);
 			background: var(--color-surface);
-			padding: 0 0.25rem;
-			transition:
-				transform 0.2s,
-				left 0.2s,
-				top 0.2s,
-				font-size 0.2s;
-			will-change: transform, left, top, font-size;
+			margin-bottom: var(--space-2);
 		}
 
 		input,
 		textarea {
 			// height: 56px;
 			width: 100%;
-			padding: var(--space-4);
+			padding: var(--space-3);
 			font-size: 1rem;
 			border-radius: var(--round-md);
 			border: none;
