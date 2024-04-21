@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import './style.scss';
 
 	let { children } = $props();
@@ -15,9 +14,9 @@
 		place-items: center;
 		// flex-direction: column;
 		// align-items: center;
-		max-width: 500px;
+		max-width: 400px;
 		margin: 0 auto;
 		height: 100%;
-		padding: var(--space-4);
+		padding: var(--space-10) var(--space-4);
 	}
 </style>
