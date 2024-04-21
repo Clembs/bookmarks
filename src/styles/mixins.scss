@@ -1,0 +1,8 @@
+@mixin focus-visible($offset-start: 4px, $size: 2px) {
+	&:focus-visible {
+		outline: 0;
+		box-shadow:
+			0 0 0 $offset-start var(--color-surface),
+			0 0 0 $offset-start + $size var(--color-outline);
+	}
+}
