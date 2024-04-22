@@ -1,14 +1,16 @@
-export type NavigationState = 'mouse' | 'keyboard';
+export type InputType = 'mouse' | 'keyboard';
 
-export function createNavigation() {
-	let navigationState = $state<NavigationState>('mouse');
+function createInputState() {
+	let state = $state<InputType>('mouse');
 
 	return {
-		setState(state: NavigationState) {
-			navigationState = state;
+		set(newState: InputType) {
+			state = newState;
 		},
 		get state() {
-			return navigationState;
+			return state;
 		}
 	};
 }
+
+export const inputType = createInputState();

@@ -5,12 +5,11 @@
 	import { handleKeyboardShortcut } from '$lib/helpers/keyboard/handler';
 	import { getBookmarkKbdActions } from '$lib/helpers/keyboard/bookmark';
 	import ContextMenu from './ContextMenu.svelte';
-	import { createNavigation } from '$lib/helpers/navigation.svelte';
 	import { getBookmarkContextMenuItems } from '$lib/helpers/context-menu/bookmarks';
 	import { Plus } from 'phosphor-svelte';
+	import { inputType } from '$lib/helpers/navigation.svelte';
 
 	let currentBookmark = $state<Bookmark | undefined>();
-	let navigation = createNavigation();
 
 	let contextMenuVisible = $state(false);
 	let x = $state(0);
@@ -58,7 +57,7 @@
 	function useMouse(cb: (x: MouseEvent) => void) {
 		return (ev: MouseEvent) => {
 			if (contextMenuVisible) return;
-			navigation.setState('mouse');
+			inputType.set('mouse');
 			cb(ev);
 		};
 	}
@@ -68,13 +67,13 @@
 	onkeydown={(ev) => {
 		if (contextMenuVisible) return;
 
-		if (navigation.state === "keyboard" && currentBookmark) {
+		if (inputType.state === "keyboard" && currentBookmark) {
 			handleKeyboardShortcut(ev, getBookmarkKbdActions(currentBookmark));
 		}
 
 		if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
 			ev.preventDefault();
-			navigation.setState('keyboard');
+			inputType.set('keyboard');
 
 			const index = bookmarks.findIndex(currentBookmark?.raw.id);
 			let newIndex = index;
@@ -127,7 +126,7 @@
 		{#each bookmarks.all as bookmark (bookmark.raw.id)}
 			<BookmarkComponent
 				active={currentBookmark && currentBookmark.raw.id === bookmark.raw.id}
-				{navigation}
+				navigation={inputType}
 				{bookmark}
 				onmouseenter={useMouse(() => (currentBookmark = bookmark))}
 				onmouseleave={useMouse(() => (currentBookmark = undefined))}
