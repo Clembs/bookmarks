@@ -2,15 +2,15 @@
 	import { page } from '$app/stores';
 	import Dialog from '$lib/components/Dialog.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
+	import { screenSize } from '$lib/helpers/navigation.svelte';
 	import { GearSix, Plus } from 'phosphor-svelte';
 
 	let { isSidebarOpen = $bindable() } = $props();
 	let isCreationModalOpen = $state(false);
 
 	$effect(() => {
-		const isExpanded = window.matchMedia('(min-width: 1200px)').matches;
-
-		isSidebarOpen = isExpanded;
+		screenSize; // i'm not stupid, it's just how svelte expects dependencies to be declared in effects
+		isSidebarOpen = screenSize.width >= 1200;
 	});
 </script>
 
@@ -34,14 +34,6 @@
 		<TextInput name="name" label="Name" required autofocus />
 	</form>
 </Dialog>
-
-<svelte:window
-	onresize={(ev) => {
-		const isExpanded = window.matchMedia('(min-width: 1200px)').matches;
-
-		isSidebarOpen = isExpanded;
-	}}
-/>
 
 <div id="sidebar-wrapper" data-active={isSidebarOpen}>
 	<aside>
