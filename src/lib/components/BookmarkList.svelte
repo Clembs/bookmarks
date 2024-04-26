@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Bookmark, Bookmarks } from '$lib/helpers/bookmark.svelte';
+	import type { Bookmark } from '$lib/helpers/bookmark.svelte';
 	import autoAnimate from '@formkit/auto-animate';
 	import BookmarkComponent from '$lib/components/Bookmark.svelte';
 	import { handleKeyboardShortcut } from '$lib/helpers/keyboard/handler';
@@ -19,7 +19,7 @@
 	let {
 		bookmarks = $bindable()
 	}: {
-		bookmarks: Bookmarks;
+		bookmarks: Bookmark[];
 	} = $props();
 
 	function showContextMenu(ev: MouseEvent, bookmark: Bookmark) {
@@ -75,36 +75,39 @@
 			ev.preventDefault();
 			inputType.set('keyboard');
 
-			const index = bookmarks.findIndex(currentBookmark?.raw.id);
+			const index = bookmarks.findIndex(({ raw }) => raw.id === currentBookmark?.raw.id);
 			let newIndex = index;
-
+			
 			if (ev.key === 'ArrowDown' && index < bookmarks.length - 1) {
 				newIndex++;
-				currentBookmark = bookmarks.at(newIndex);
 			}
 			if (ev.key === 'ArrowUp' && index > 0) {
 				newIndex--;
-				currentBookmark = bookmarks.at(newIndex);
 			}
 
-			const bmEl = listEl?.children[newIndex];
-			const bmElRect = bmEl?.getBoundingClientRect();
+			if (newIndex !== -1) {
+				currentBookmark = bookmarks[newIndex];
+				
+				const bmEl = listEl?.children[newIndex] as HTMLElement;
+				const bmElRect = bmEl?.getBoundingClientRect();
+				bmEl.focus();
 
-			const inputFormEl = document.querySelector("#add-bookmark") as HTMLElement;
-			const inputRect = inputFormEl.getBoundingClientRect();
-			const inputHeight = inputRect.height + 16;
+				const inputFormEl = document.querySelector("#add-bookmark") as HTMLElement;
+				const inputRect = inputFormEl.getBoundingClientRect();
+				const inputHeight = inputRect.height + 16;
 
-			if (bmEl && bmElRect && 
-				(bmElRect.top - inputHeight < 0 || bmElRect.bottom > window.innerHeight)
-			) {
-				bmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+				if (bmEl && bmElRect && 
+					(bmElRect.top - inputHeight < 0 || bmElRect.bottom > window.innerHeight)
+				) {
+					bmEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-				if (ev.key === "ArrowUp" && bmElRect.top - inputHeight < 0) {
-					const scrollableEl = document.getElementById("scrollable-wrapper")!;
-					scrollableEl.scrollBy({
-						top: -inputHeight,
-						behavior: 'smooth'
-					});
+					if (ev.key === "ArrowUp" && bmElRect.top - inputHeight < 0) {
+						const scrollableEl = document.getElementById("scrollable-wrapper")!;
+						scrollableEl.scrollBy({
+							top: -inputHeight,
+							behavior: 'smooth'
+						});
+					}
 				}
 			}
 		}
@@ -123,10 +126,9 @@
 
 <ul use:autoAnimate bind:this={listEl}>
 	{#if bookmarks.length}
-		{#each bookmarks.all as bookmark (bookmark.raw.id)}
+		{#each bookmarks as bookmark (bookmark.raw.id)}
 			<BookmarkComponent
 				active={currentBookmark && currentBookmark.raw.id === bookmark.raw.id}
-				navigation={inputType}
 				{bookmark}
 				onmouseenter={useMouse(() => (currentBookmark = bookmark))}
 				onmouseleave={useMouse(() => (currentBookmark = undefined))}
