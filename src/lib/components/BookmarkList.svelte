@@ -4,7 +4,6 @@
 	import BookmarkComponent from '$lib/components/Bookmark.svelte';
 	import { handleKeyboardShortcut } from '$lib/helpers/keyboard/handler';
 	import { getBookmarkKbdActions } from '$lib/helpers/keyboard/bookmark';
-	import { Plus } from 'phosphor-svelte';
 	import { contextMenu, inputType } from '$lib/helpers/navigation.svelte';
 
 	let currentBookmark = $state<Bookmark | undefined>();
@@ -78,26 +77,14 @@
 />
 
 <ul use:autoAnimate bind:this={listEl}>
-	{#if bookmarks.length}
-		{#each bookmarks as bookmark (bookmark.raw.id)}
-			<BookmarkComponent
-				active={currentBookmark && currentBookmark.raw.id === bookmark.raw.id}
-				{bookmark}
-				onmouseenter={useMouse(() => (currentBookmark = bookmark))}
-				onmouseleave={useMouse(() => (currentBookmark = undefined))}
-			/>
-		{/each}
-	{:else}
-		<button
-			on:click={() => {
-			const form = document.getElementById('add-bookmark') as HTMLFormElement;
-			form.requestSubmit();
-		}}
-			id="add-to-saves"
-		>
-			<Plus /> Add to saves
-		</button>
-	{/if}
+	{#each bookmarks as bookmark (bookmark.raw.id)}
+		<BookmarkComponent
+			active={currentBookmark && currentBookmark.raw.id === bookmark.raw.id}
+			{bookmark}
+			onmouseenter={useMouse(() => (currentBookmark = bookmark))}
+			onmouseleave={useMouse(() => (currentBookmark = undefined))}
+		/>
+	{/each}
 </ul>
 
 <style lang="scss">

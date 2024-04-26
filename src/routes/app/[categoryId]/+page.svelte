@@ -7,7 +7,9 @@
 
 	let value = $state('');
 
-	bookmarks.setBookmarks(data.bookmarks);
+	$effect(() => {
+		bookmarks.setBookmarks(data.bookmarks);
+	});
 </script>
 
 <header>
