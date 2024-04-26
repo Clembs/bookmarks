@@ -3,7 +3,7 @@
 	import { trimUrl } from '$lib/helpers/trimUrl';
 	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
 	import { YOUTUBE_VIDEO_REGEX } from '$lib/validation';
-	import { TextAlignLeft } from 'phosphor-svelte';
+	import { Globe, TextAlignLeft } from 'phosphor-svelte';
 	import { inputType } from '$lib/helpers/navigation.svelte';
 
 	let {
@@ -66,13 +66,12 @@
 					width="24"
 				/>
 			{:else if bookmark.raw.type === 'url'}
-				<div
-					class="bookmark-icon fallback"
-					style:--color="#{Math.floor(Math.random() * 16777215).toString(16)}"
-				/>
+				<div class="bookmark-icon">
+					<Globe size="24" />
+				</div>
 			{:else}
 				<div class="bookmark-icon">
-					<TextAlignLeft />
+					<TextAlignLeft size="24" />
 				</div>
 			{/if}
 
@@ -210,12 +209,6 @@
 			min-height: 24px;
 			display: grid;
 			place-items: center;
-
-			&.fallback {
-				border-radius: var(--round-full);
-				background-color: var(--color);
-				color: var(--color-secondary-fixed);
-			}
 		}
 
 		&-info {
