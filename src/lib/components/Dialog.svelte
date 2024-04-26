@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { ComponentType } from 'svelte';
+	import type { ComponentType, Snippet } from 'svelte';
 	import Button from './Button.svelte';
+	import { enhance } from '$app/forms';
 
 	let {
 		el,
@@ -9,6 +10,7 @@
 		headline,
 		supportingText,
 		children,
+		formAction,
 		actions,
 		onclose
 	}: {
@@ -17,7 +19,8 @@
 		icon?: ComponentType;
 		headline?: string;
 		supportingText?: any;
-		children: any;
+		children: Snippet;
+		formAction?: string;
 		actions?: {
 			label: string;
 			action: 'submit' | (() => void);
@@ -41,7 +44,7 @@
 	});
 </script>
 
-<dialog bind:this={el} class="dialog" onclose={close}>
+{#snippet dialogContent()}
 	<div class="content">
 		{#if icon}
 			<div class="icon">
@@ -51,12 +54,12 @@
 		{#if headline}
 			<h2>{headline}</h2>
 		{/if}
-
+	
 		{#if supportingText}
 			{@render supportingText()}
 		{/if}
-
-
+	
+	
 		{@render children()}
 	</div>
 
@@ -64,12 +67,13 @@
 		<div class="actions">
 			{#each actions as action}
 				{#if typeof action.action === 'string'}
-					<Button style={action.type || 'text'} type="submit">
+					<Button style={action.type || 'text'} inline type="submit">
 						{action.label}
 					</Button>
 				{:else}
 					<Button
 						style={action.type || 'text'}
+						inline
 						onclick={() => typeof action.action === 'function' && action?.action()}
 					>
 						{action.label}
@@ -77,6 +81,16 @@
 				{/if}
 			{/each}
 		</div>
+	{/if}
+{/snippet}
+
+<dialog bind:this={el} class="dialog" onclose={close}>
+	{#if formAction}
+		<form use:enhance method="post" action={formAction}>
+			{@render dialogContent()}
+		</form>
+	{:else}
+		{@render dialogContent()}
 	{/if}
 </dialog>
 
@@ -89,7 +103,7 @@
 
 		border: none;
 
-		border-radius: var(--round-xlg);
+		border-radius: var(--round-md);
 		background-color: var(--color-surface-container-high);
 		color: var(--color-on-surface-variant);
 
@@ -97,33 +111,34 @@
 			text-align: center;
 		}
 
-		.content {
-			display: flex;
-			flex-direction: column;
-			gap: var(--space-4);
-
-			.icon {
-				color: var(--color-secondary);
-			}
-
-			h2 {
-				color: var(--color-on-surface);
-				margin: 0;
-				margin-top: var(--space-2);
-			}
-		}
-
-		.actions {
-			display: flex;
-			justify-content: flex-end;
-			width: 100%;
-			gap: var(--space-2);
-			margin-top: var(--space-4);
-		}
 
 		&::backdrop {
 			background: var(--neutral-0);
 			opacity: 0.32;
 		}
+	}
+
+	.content {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+
+		.icon {
+			color: var(--color-secondary);
+		}
+
+		h2 {
+			color: var(--color-on-surface);
+			margin: 0;
+			margin-top: var(--space-2);
+		}
+	}
+
+	.actions {
+		display: flex;
+		justify-content: flex-end;
+		width: 100%;
+		gap: var(--space-2);
+		margin-top: var(--space-4);
 	}
 </style>
