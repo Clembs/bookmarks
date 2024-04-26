@@ -1,4 +1,3 @@
-import { invalidate } from '$app/navigation';
 import type { RawBookmark } from '$lib/db/types';
 
 export const urlTypeBookmarks: Partial<RawBookmark['type']>[] = ['url', 'youtube'];
@@ -22,8 +21,6 @@ export class Bookmark {
 				})
 			});
 
-			await invalidate('bookmarks').then(() => console.log(`updated ${this.raw.id}`));
-
 			return req.ok;
 		} catch (error) {
 			console.error(error);
@@ -33,13 +30,17 @@ export class Bookmark {
 
 	async delete() {
 		try {
-			const req = await fetch(`/api/bookmarks/${this.raw.id}`, {
-				method: 'DELETE'
-			});
+			if (this.raw.id) {
+				bookmarks.removeBookmark(this.raw.id);
 
-			await invalidate('bookmarks').then(() => console.log(`deleted ${this.raw.id}`));
+				const req = await fetch(`/api/bookmarks/${this.raw.id}`, {
+					method: 'DELETE'
+				});
 
-			return req.ok;
+				return req.ok;
+			} else {
+				bookmarks.bookmarks.shift();
+			}
 		} catch (error) {
 			return false;
 		}
@@ -56,47 +57,26 @@ export class Bookmark {
 	setLoading = (newState: boolean) => (this.bmIsLoading = newState);
 }
 
-export class Bookmarks {
-	private bookmarks: Bookmark[] = [];
+function createBookmarks() {
+	let bms = $state<Bookmark[]>([]);
 
-	constructor(rawBookmarks: (RawBookmark | Bookmark)[]) {
-		this.bookmarks = rawBookmarks.map((bm) => (bm instanceof Bookmark ? bm : new Bookmark(bm)));
-	}
-
-	get all() {
-		return this.bookmarks;
-	}
-
-	get length() {
-		return this.bookmarks.length;
-	}
-
-	push(newBookmark: RawBookmark) {
-		this.bookmarks.push(new Bookmark(newBookmark));
-		invalidate('bookmarks').then(() => console.log('pushed bookmark'));
-	}
-
-	remove(id: string) {
-		this.bookmarks = this.bookmarks.filter((bm) => bm.raw.id !== id);
-	}
-
-	find(id: string | undefined) {
-		return this.bookmarks.find((bm) => bm.raw.id === id);
-	}
-
-	findIndex(id: string | undefined) {
-		return this.bookmarks.findIndex((bm) => bm.raw.id === id);
-	}
-
-	pop() {
-		return this.bookmarks.pop();
-	}
-
-	at(index: number) {
-		return this.bookmarks[index];
-	}
-
-	filter(fn: (bm: Bookmark) => boolean) {
-		return new Bookmarks(this.bookmarks.filter(fn));
-	}
+	return {
+		get bookmarks() {
+			return bms;
+		},
+		addBookmark(newBookmark: RawBookmark | Bookmark) {
+			bms = [newBookmark instanceof Bookmark ? newBookmark : new Bookmark(newBookmark), ...bms];
+		},
+		setBookmarks(newBookmarks: (RawBookmark | Bookmark)[]) {
+			bms =
+				newBookmarks[0] instanceof Bookmark
+					? (newBookmarks as Bookmark[])
+					: newBookmarks.map((bm) => new Bookmark(bm as RawBookmark));
+		},
+		removeBookmark(id: string) {
+			bms = bms.filter((bm) => bm.raw.id !== id);
+		}
+	};
 }
+
+export const bookmarks = createBookmarks();
