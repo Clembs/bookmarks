@@ -2,11 +2,26 @@
 	import Button from '$lib/components/Button.svelte';
 	import { List, TextOutdent } from 'phosphor-svelte';
 	import Sidebar from '$lib/components/Sidebar/Sidebar.svelte';
+	import { contextMenu } from '$lib/helpers/navigation.svelte';
+	import ContextMenu from '$lib/components/ContextMenu.svelte';
 
 	let { children, data } = $props();
 
 	let isSidebarOpen = $state(!data.isMobile || false);
 </script>
+
+{#if contextMenu.state.state === 'open'}
+	<ContextMenu
+		x={contextMenu.state.x}
+		y={contextMenu.state.y}
+		actions={contextMenu.state.actions}
+		visible={contextMenu.state.state === 'open'}
+		onclose={() => {
+			contextMenu.close();
+		}}
+	/>
+{/if}
+
 
 <div id="layout">
 	<Sidebar bind:isSidebarOpen />

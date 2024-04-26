@@ -1,15 +1,13 @@
 <script lang="ts">
-	import type { ComponentType } from 'svelte';
 	import KeyboardShortcut from '$lib/components/KeyboardShortcut.svelte';
 	import IndeterminateProgressSpinner from '$lib/components/IndeterminateProgressSpinner.svelte';
 	import Scrim from './Scrim.svelte';
+	import type { ContextMenuAction } from '$lib/types';
 
-	type Action = () => void | Promise<void>;
-
-	let { x, y, items, visible = $bindable(), el, onclose }: {
+	let { x, y, actions, visible = $bindable(), el, onclose }: {
 		x: number;
 		y: number;
-		items: { label: string; action: Action | string; icon?: ComponentType; shortcut?: string }[];
+		actions: ContextMenuAction[];
 		visible: boolean;
 		el?: HTMLUListElement;
 		onclose?: () => void;
@@ -24,11 +22,11 @@
 		onclose?.();
 	}
 
-	async function handleAction(item: (typeof items)[number]) {
-		if (typeof item.action === 'string') return;
-		loadingMenuItem = item.label;
+	async function handleAction(action: ContextMenuAction) {
+		if (typeof action.action === 'string') return;
+		loadingMenuItem = action.label;
 
-		await item.action();
+		await action.action();
 
 		loadingMenuItem = undefined;
 		closeMenu();
@@ -40,14 +38,14 @@
 		if (ev.key === 'Escape') closeMenu();
 		if (ev.key === 'ArrowUp' && selectedMenuItem !== undefined && selectedMenuItem > 0) {
 			ev.preventDefault();
-			selectedMenuItem = (selectedMenuItem - 1 + items.length) % items.length;
+			selectedMenuItem = (selectedMenuItem - 1 + actions.length) % actions.length;
 
 			const clickable: HTMLAnchorElement | HTMLButtonElement = document.getElementById(`ctx-item-${selectedMenuItem}`)?.querySelector('button, a')!;
 			clickable?.focus();
 		}
-		if (ev.key === 'ArrowDown' && (selectedMenuItem || 0) < items.length - 1) {
+		if (ev.key === 'ArrowDown' && (selectedMenuItem || 0) < actions.length - 1) {
 			ev.preventDefault();
-			selectedMenuItem = selectedMenuItem === undefined ? 0 : (selectedMenuItem + 1) % items.length;
+			selectedMenuItem = selectedMenuItem === undefined ? 0 : (selectedMenuItem + 1) % actions.length;
 			const clickable: HTMLAnchorElement | HTMLButtonElement = document.getElementById(`ctx-item-${selectedMenuItem}`)?.querySelector('button, a')!;
 			clickable?.focus();
 		}
@@ -57,7 +55,7 @@
 	}}
 />
 
-{#snippet contextMenuItemLabel(item: typeof items[number])}
+{#snippet contextMenuItemLabel(item: typeof actions[number])}
 	<div class="label">
 		{#if loadingMenuItem === item.label}
 			<IndeterminateProgressSpinner />
@@ -89,23 +87,23 @@
 	}}
 	bind:this={el}
 >
-	{#each items as item, i}
+	{#each actions as actions, i}
 		<li role="menuitem" id="ctx-item-{i}">
-			{#if typeof item.action === 'string'}
+			{#if typeof actions.action === 'string'}
 				<a
-					href={item.action}
+					href={actions.action}
 					target="_blank"
 					rel="noopener noreferrer"
 					data-selected={!!selectedMenuItem && i === selectedMenuItem}
 				>
-					{@render contextMenuItemLabel(item)}
+					{@render contextMenuItemLabel(actions)}
 				</a>
 			{:else}
 				<button
-					onclick={() => typeof item.action === 'function' && handleAction(item)}
+					onclick={() => typeof actions.action === 'function' && handleAction(actions)}
 					data-selected={i === selectedMenuItem}
 				>
-					{@render contextMenuItemLabel(item)}
+					{@render contextMenuItemLabel(actions)}
 				</button>
 			{/if}
 		</li>

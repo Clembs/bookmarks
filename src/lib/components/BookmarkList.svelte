@@ -4,16 +4,11 @@
 	import BookmarkComponent from '$lib/components/Bookmark.svelte';
 	import { handleKeyboardShortcut } from '$lib/helpers/keyboard/handler';
 	import { getBookmarkKbdActions } from '$lib/helpers/keyboard/bookmark';
-	import ContextMenu from './ContextMenu.svelte';
-	import { getBookmarkContextMenuItems } from '$lib/helpers/context-menu/bookmarks';
 	import { Plus } from 'phosphor-svelte';
-	import { inputType } from '$lib/helpers/navigation.svelte';
+	import { contextMenu, inputType } from '$lib/helpers/navigation.svelte';
 
 	let currentBookmark = $state<Bookmark | undefined>();
 
-	let contextMenuVisible = $state(false);
-	let x = $state(0);
-	let y = $state(0);
 	let listEl = $state<HTMLUListElement>();
 
 	let {
@@ -22,41 +17,9 @@
 		bookmarks: Bookmark[];
 	} = $props();
 
-	function showContextMenu(ev: MouseEvent, bookmark: Bookmark) {
-		if (contextMenuVisible) {
-			contextMenuVisible = false;
-			currentBookmark = undefined;
-			return;
-		}
-
-		ev.preventDefault();
-		currentBookmark = bookmark;
-		const element = ev.target as HTMLElement;
-		const rect = element.getBoundingClientRect();
-		const selectMenuHeight = getBookmarkContextMenuItems(currentBookmark).length * 40 + 8;
-
-		// check context menu collision with the bottom of the screen
-		if (rect.top + selectMenuHeight > window.innerHeight) {
-			y = window.innerHeight - selectMenuHeight - 16;
-		} else {
-			y = ev.clientY;
-		}
-		// TODO: fix whatever i did here
-		// check context menu collision with the right of the screen, or the left
-		// if (rect.left + selectMenuWidth > window.innerWidth) {
-		// 	x = window.innerWidth - selectMenuWidth - 16;
-		// } else if (rect.left < selectMenuWidth) {
-		// 	x = 16;
-		// } else {
-		x = ev.clientX;
-		// }
-
-		contextMenuVisible = true;
-	}
-
 	function useMouse(cb: (x: MouseEvent) => void) {
 		return (ev: MouseEvent) => {
-			if (contextMenuVisible) return;
+			if (contextMenu.state.state === 'open') return;
 			inputType.set('mouse');
 			cb(ev);
 		};
@@ -65,7 +28,7 @@
 
 <svelte:window
 	onkeydown={(ev) => {
-		if (contextMenuVisible) return;
+		if (contextMenu.state.state === 'open') return;
 
 		if (inputType.state === "keyboard" && currentBookmark) {
 			handleKeyboardShortcut(ev, getBookmarkKbdActions(currentBookmark));
@@ -114,16 +77,6 @@
 	}}
 />
 
-{#if contextMenuVisible && currentBookmark}
-	<ContextMenu
-		bind:visible={contextMenuVisible}
-		{x}
-		{y}
-		items={getBookmarkContextMenuItems(currentBookmark)}
-		onclose={() => (currentBookmark = undefined)}
-	/>
-{/if}
-
 <ul use:autoAnimate bind:this={listEl}>
 	{#if bookmarks.length}
 		{#each bookmarks as bookmark (bookmark.raw.id)}
@@ -132,7 +85,6 @@
 				{bookmark}
 				onmouseenter={useMouse(() => (currentBookmark = bookmark))}
 				onmouseleave={useMouse(() => (currentBookmark = undefined))}
-				oncontextmenu={useMouse((ev) => showContextMenu(ev, bookmark))}
 			/>
 		{/each}
 	{:else}

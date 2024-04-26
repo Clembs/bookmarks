@@ -23,7 +23,7 @@ export type RawBookmarkInsert = typeof bookmarks.$inferInsert;
 
 export type ContextMenuAction = {
 	label: string;
-	action: (() => void) | string | undefined;
+	action: (() => void | Promise<void>) | string;
 	icon?: ComponentType;
 	shortcut?: string;
 };

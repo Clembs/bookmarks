@@ -4,7 +4,8 @@
 	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
 	import { YOUTUBE_VIDEO_REGEX } from '$lib/validation';
 	import { Globe, TextAlignLeft } from 'phosphor-svelte';
-	import { inputType } from '$lib/helpers/navigation.svelte';
+	import { contextMenu, inputType } from '$lib/helpers/navigation.svelte';
+	import { getBookmarkContextMenuItems } from '$lib/helpers/context-menu/bookmarks';
 
 	let {
 		bookmark,
@@ -13,7 +14,6 @@
 	}: {
 		bookmark: Bookmark;
 		active?: boolean;
-		oncontextmenu?: (ev: MouseEvent) => void;
 		onmouseenter?: (ev: MouseEvent) => void;
 		onmouseleave?: (ev: MouseEvent) => void;
 	} = $props();
@@ -27,6 +27,15 @@
 		bookmark.raw.title = newTitle;
 		bookmark.setRenaming(false);
 		await bookmark.rename(newTitle);
+	}
+
+	function showContextMenu(ev: MouseEvent) {
+		if (contextMenu.state.state === 'open') {
+			contextMenu.close();
+			return;
+		}
+
+		contextMenu.open(ev, getBookmarkContextMenuItems(bookmark));
 	}
 </script>
 
@@ -125,16 +134,16 @@
 {/snippet}
 
 {#if bookmark.raw.partial}
-	<article
+	<button
 		class="bookmark"
 		class:keyboard={inputType.state === 'keyboard'}
 		class:active
 		data-bookmark-id={bookmark.raw.id}
-		tabindex="0"
+		oncontextmenu={showContextMenu}
 		{...mouseEvents}
 	>
 		{@render bookmarkContent(bookmark)}
-	</article>
+	</button>
 {:else if urlTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
 	<a
 		href={bookmark.raw.value}
@@ -143,15 +152,16 @@
 		class="bookmark"
 		class:keyboard={inputType.state === 'keyboard'}
 		class:active
-		{...mouseEvents}
 		data-bookmark-id={bookmark.raw.id}
-		>
+		oncontextmenu={showContextMenu}
+		{...mouseEvents}
+	>
 		<!-- use:clickoutside
 			on:clickoutside={submitRename} -->
 			{@render bookmarkContent(bookmark)}
-		</a>
-		{:else if copyTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
-		<button
+	</a>
+{:else if copyTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
+	<button
 		onclick={() => {
 			bookmark.raw.value && navigator.clipboard.writeText(bookmark.raw.value);
 		}}
@@ -159,6 +169,7 @@
 		class:keyboard={inputType.state === 'keyboard'}
 		class:active
 		data-bookmark-id={bookmark.raw.id}
+		oncontextmenu={showContextMenu}
 		{...mouseEvents}
 	>
 		<!-- use:clickoutside
@@ -166,18 +177,18 @@
 		{@render bookmarkContent(bookmark)}
 	</button>
 {:else}
-	<article
+	<button
 		class="bookmark"
 		class:keyboard={inputType.state === 'keyboard'}
 		class:active
-		{...mouseEvents}
-		tabindex="0"
 		data-bookmark-id={bookmark.raw.id}
+		oncontextmenu={showContextMenu}
+		{...mouseEvents}
 	>
 		<!-- use:clickoutside
 		on:clickoutside={submitRename} -->
 		{@render bookmarkContent(bookmark)}
-	</article>
+	</button>
 {/if}
 
 <style lang="scss">
