@@ -93,7 +93,6 @@
 
 		.label {
 			color: var(--color-on-surface-variant);
-			background: var(--color-surface);
 			margin-bottom: var(--space-2);
 		}
 
