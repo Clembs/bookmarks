@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
 	import { List, TextOutdent } from 'phosphor-svelte';
-	import Sidebar from './Sidebar.svelte';
+	import Sidebar from '$lib/components/Sidebar/Sidebar.svelte';
 
 	let { children, data } = $props();
 
