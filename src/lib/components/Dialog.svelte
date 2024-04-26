@@ -23,7 +23,7 @@
 		formAction?: string;
 		actions?: {
 			label: string;
-			action: 'submit' | (() => void);
+			action: 'submit' | 'close' | (() => void);
 			type?: 'filled' | 'text';
 		}[];
 		onclose?: () => void;
@@ -59,23 +59,32 @@
 			{@render supportingText()}
 		{/if}
 	
-	
 		{@render children()}
 	</div>
 
 	{#if actions}
 		<div class="actions">
 			{#each actions as action}
-				{#if typeof action.action === 'string'}
-					<Button style={action.type || 'text'} inline type="submit">
-						{action.label}
-					</Button>
-				{:else}
+				{#if typeof action.action !== 'string'}	
 					<Button
 						style={action.type || 'text'}
 						inline
 						onclick={() => typeof action.action === 'function' && action?.action()}
 					>
+					{action.label}
+					</Button>
+				{:else if action.action === 'close'}
+					<form method="dialog">
+						<Button
+							style={action.type || 'text'}
+							inline
+							type="submit"
+						>
+							{action.label}
+						</Button>
+					</form>
+				{:else if action.action === 'submit'}
+					<Button style={action.type || 'text'} inline type="submit">
 						{action.label}
 					</Button>
 				{/if}
