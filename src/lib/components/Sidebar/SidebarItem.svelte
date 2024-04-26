@@ -4,6 +4,7 @@
   let {
     active = false,
     href,
+    oncontextmenu,
     onclick,
     icon,
     iconActive,
@@ -11,6 +12,7 @@
   }: {
     active?: boolean;
     href?: string;
+    oncontextmenu?: (event: MouseEvent) => void;
     onclick?: (event: Event) => void;
     icon: ComponentType,
     iconActive?: ComponentType,
@@ -24,7 +26,7 @@
 </script>
 
 {#if href}
-  <a {href} class="item" data-active={active}>
+  <a {href} {oncontextmenu} class="item" data-active={active}>
     {#if icon}
       {#if active && iconActive}
         <svelte:component this={iconActive} {...iconProps} />
@@ -35,7 +37,7 @@
       {@render children()}
   </a>
   {:else}
-    <button {onclick} class="item" data-active={active}>
+    <button {onclick} {oncontextmenu} class="item" data-active={active}>
       {#if icon}
         {#if active && iconActive}
           <svelte:component this={iconActive} {...iconProps} />

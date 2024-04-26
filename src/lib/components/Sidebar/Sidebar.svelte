@@ -2,12 +2,23 @@
 	import { page } from '$app/stores';
 	import Dialog from '$lib/components/Dialog.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
-	import { screenSize } from '$lib/helpers/navigation.svelte';
+	import { contextMenu, screenSize } from '$lib/helpers/navigation.svelte';
 	import { Folder, FolderOpen, GearSix, Plus, SquaresFour } from 'phosphor-svelte';
 	import SidebarItem from './SidebarItem.svelte';
+	import type { RawCategory } from '$lib/types';
+	import { getCategoryContextMenuItems } from '$lib/helpers/context-menu/category';
 
 	let { isSidebarOpen = $bindable() } = $props();
 	let isCreationModalOpen = $state(false);
+
+	function showContextMenu(ev: MouseEvent, category: RawCategory) {
+		if (contextMenu.state.state === 'open') {
+			contextMenu.close();
+			return;
+		}
+
+		contextMenu.open(ev, getCategoryContextMenuItems(category));
+	}
 
 	$effect(() => {
 		screenSize; // i'm not stupid, it's just how svelte expects dependencies to be declared in effects
@@ -49,6 +60,7 @@
 					icon={Folder}
 					iconActive={FolderOpen}
 					active={$page.url.pathname === `/app/${category.id}`}
+					oncontextmenu={(ev) => showContextMenu(ev, category)}
 				>
 					{category.name}
 				</SidebarItem>
