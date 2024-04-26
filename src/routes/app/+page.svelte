@@ -11,7 +11,7 @@
 </script>
 
 <header>
-	<h1>All saves</h1>
+	<h1>Unorganized saves</h1>
 
 	<BookmarkInput bind:value />
 </header>

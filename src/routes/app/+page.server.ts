@@ -4,7 +4,8 @@ export async function load({ parent, depends }) {
 	const { session, categories } = await parent();
 
 	const bookmarks = await db.query.bookmarks.findMany({
-		where: ({ userId }, { eq }) => eq(userId, session.userId),
+		where: ({ userId, categoryId }, { eq, isNull, and }) =>
+			and(eq(userId, session.userId), isNull(categoryId)),
 		orderBy: ({ createdAt }, { desc }) => desc(createdAt)
 	});
 

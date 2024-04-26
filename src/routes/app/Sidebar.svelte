@@ -31,7 +31,7 @@
 	]}
 	onclose={() => (isCreationModalOpen = false)}
 >
-	<TextInput name="name" label="Name" required autofocus />
+	<TextInput maxlength={32} name="name" label="Name" required autofocus />
 </Dialog>
 
 <div id="sidebar-wrapper" data-active={isSidebarOpen}>
@@ -41,7 +41,7 @@
 		<ul id="top-items">
 			<a class="item" data-active={$page.url.pathname === '/app'} href="/app">
 				<SquaresFour weight={$page.url.pathname === '/app' ? 'fill' : 'regular'} size="20" />
-				All saves
+				Unorganized
 			</a>
 			{#each $page.data.categories as category (category.id)}
 				{@const isActive = $page.url.pathname === `/app/${category.id}`}
