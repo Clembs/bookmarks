@@ -3,18 +3,16 @@
 	import { trimUrl } from '$lib/helpers/trimUrl';
 	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
 	import { YOUTUBE_VIDEO_REGEX } from '$lib/validation';
-	import type { createNavigation } from '$lib/helpers/navigation.svelte';
 	import { TextAlignLeft } from 'phosphor-svelte';
+	import { inputType } from '$lib/helpers/navigation.svelte';
 
 	let {
 		bookmark,
 		active,
-		navigation,
 		...mouseEvents
 	}: {
 		bookmark: Bookmark;
 		active?: boolean;
-		navigation: ReturnType<typeof createNavigation>;
 		oncontextmenu?: (ev: MouseEvent) => void;
 		onmouseenter?: (ev: MouseEvent) => void;
 		onmouseleave?: (ev: MouseEvent) => void;
@@ -106,7 +104,7 @@
 					{:else}
 						<div class="bookmark-info-subtext hint">
 							<!-- {#if active} -->
-							{#if navigation.state === 'keyboard'}
+							{#if inputType.state === 'keyboard'}
 								Enter to copy
 							{:else}
 								Click to copy
@@ -130,8 +128,10 @@
 {#if bookmark.raw.partial}
 	<article
 		class="bookmark"
-		class:keyboard={navigation.state === 'keyboard'}
+		class:keyboard={inputType.state === 'keyboard'}
 		class:active
+		data-bookmark-id={bookmark.raw.id}
+		tabindex="0"
 		{...mouseEvents}
 	>
 		{@render bookmarkContent(bookmark)}
@@ -142,22 +142,24 @@
 		target="_blank"
 		rel="noopener noreferrer"
 		class="bookmark"
-		class:keyboard={navigation.state === 'keyboard'}
+		class:keyboard={inputType.state === 'keyboard'}
 		class:active
 		{...mouseEvents}
-	>
+		data-bookmark-id={bookmark.raw.id}
+		>
 		<!-- use:clickoutside
-		on:clickoutside={submitRename} -->
-		{@render bookmarkContent(bookmark)}
-	</a>
-{:else if copyTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
-	<button
+			on:clickoutside={submitRename} -->
+			{@render bookmarkContent(bookmark)}
+		</a>
+		{:else if copyTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
+		<button
 		onclick={() => {
 			bookmark.raw.value && navigator.clipboard.writeText(bookmark.raw.value);
 		}}
 		class="bookmark"
-		class:keyboard={navigation.state === 'keyboard'}
+		class:keyboard={inputType.state === 'keyboard'}
 		class:active
+		data-bookmark-id={bookmark.raw.id}
 		{...mouseEvents}
 	>
 		<!-- use:clickoutside
@@ -167,9 +169,11 @@
 {:else}
 	<article
 		class="bookmark"
-		class:keyboard={navigation.state === 'keyboard'}
+		class:keyboard={inputType.state === 'keyboard'}
 		class:active
 		{...mouseEvents}
+		tabindex="0"
+		data-bookmark-id={bookmark.raw.id}
 	>
 		<!-- use:clickoutside
 		on:clickoutside={submitRename} -->
@@ -178,6 +182,7 @@
 {/if}
 
 <style lang="scss">
+	@import '../../styles/mixins.scss';
 	@import '../../styles/vars.scss';
 
 	.bookmark {
@@ -289,10 +294,6 @@
 				translate: 0 0;
 				transition: translate var(--transition-in-out-standard) 300ms;
 				will-change: translate, opacity;
-			}
-
-			&.keyboard {
-				outline: 2px solid var(--color-primary);
 			}
 
 			:global(.hint) {
