@@ -1,4 +1,4 @@
-import type { RawBookmark } from '$lib/db/types';
+import type { RawBookmark } from '$lib/types';
 
 export const urlTypeBookmarks: Partial<RawBookmark['type']>[] = ['url', 'youtube'];
 export const copyTypeBookmarks: Partial<RawBookmark['type']>[] = ['text', 'color', 'contact'];

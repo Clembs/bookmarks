@@ -1,6 +1,6 @@
 import { db } from '$lib/db';
 import { bookmarks } from '$lib/db/schema';
-import type { RawBookmark } from '$lib/db/types';
+import type { RawBookmark } from '$lib/types';
 import { copyTypeBookmarks } from '$lib/helpers/bookmark.svelte';
 import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';

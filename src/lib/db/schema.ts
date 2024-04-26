@@ -1,6 +1,6 @@
 import { relations, sql } from 'drizzle-orm';
 import { jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-import type { YouTubeMetadata } from './types';
+import type { YouTubeMetadata } from '../types';
 
 export const users = pgTable('users', {
 	id: text('id')

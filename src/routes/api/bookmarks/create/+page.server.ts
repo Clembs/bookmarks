@@ -1,5 +1,5 @@
 import { error, fail } from '@sveltejs/kit';
-import type { RawBookmarkInsert } from '$lib/db/types';
+import type { RawBookmarkInsert } from '$lib/types';
 import { URL_REGEX, YOUTUBE_VIDEO_REGEX } from '$lib/validation';
 import {
 	createTextBookmark,

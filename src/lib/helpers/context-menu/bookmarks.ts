@@ -1,7 +1,8 @@
 import { urlTypeBookmarks, type Bookmark } from '$lib/helpers/bookmark.svelte';
+import type { ContextMenuAction } from '$lib/types';
 import { ArrowSquareOut, Copy, PencilSimple, TrashSimple } from 'phosphor-svelte';
 
-export function getBookmarkContextMenuItems(bookmark: Bookmark) {
+export function getBookmarkContextMenuItems(bookmark: Bookmark): ContextMenuAction[] {
 	const items = [];
 
 	if (bookmark.raw.value && urlTypeBookmarks.includes(bookmark.raw.type)) {

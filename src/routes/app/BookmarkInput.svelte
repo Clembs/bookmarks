@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { RawBookmark } from '$lib/db/types';
+	import type { RawBookmark } from '$lib/types';
 	import { Bookmark, bookmarks } from '$lib/helpers/bookmark.svelte';
 	import { Plus } from 'phosphor-svelte';
 
@@ -9,9 +9,11 @@
 	let form = $state<HTMLFormElement | undefined>();
 
 	let {
-		value = $bindable('')
+		value = $bindable(''),
+		categoryId
 	}: {
 		value: string;
+		categoryId?: string;
 	} = $props();
 </script>
 
@@ -74,6 +76,8 @@
 			name="raw"
 			placeholder="Search a save or add to your saves"
 		/>
+		<input type="hidden" name="category-id" value={categoryId || ''} />
+
 		<button disabled={!value} type="submit">
 			<Plus />
 		</button>

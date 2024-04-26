@@ -1,4 +1,5 @@
 import { bookmarks, categories } from '$lib/db/schema';
+import type { ComponentType } from 'svelte';
 
 export type YouTubeMetadata = {
 	videoId: string;
@@ -19,3 +20,10 @@ export type RawCategory = typeof categories.$inferSelect & {
 };
 
 export type RawBookmarkInsert = typeof bookmarks.$inferInsert;
+
+export type ContextMenuAction = {
+	label: string;
+	action: (() => void) | string | undefined;
+	icon?: ComponentType;
+	shortcut?: string;
+};

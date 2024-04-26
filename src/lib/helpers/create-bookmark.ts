@@ -1,6 +1,6 @@
 import { db } from '$lib/db';
 import { bookmarks } from '$lib/db/schema';
-import type { RawBookmark, RawBookmarkInsert } from '$lib/db/types';
+import type { RawBookmarkInsert } from '$lib/types';
 import type { RequestEvent } from '@sveltejs/kit';
 import { decode } from 'html-entities';
 import { fetchWebsiteInfo } from './fetchWebsiteInfo';
