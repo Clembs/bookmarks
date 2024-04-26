@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { RawBookmark } from '$lib/db/types';
-	import { Bookmarks } from '$lib/helpers/bookmark.svelte';
+	import { Bookmark, bookmarks } from '$lib/helpers/bookmark.svelte';
 	import { Plus } from 'phosphor-svelte';
 
 	let error = $state('');
@@ -9,10 +9,8 @@
 	let form = $state<HTMLFormElement | undefined>();
 
 	let {
-		bookmarks,
 		value = $bindable('')
 	}: {
-		bookmarks: Bookmarks;
 		value: string;
 	} = $props();
 </script>
@@ -42,22 +40,26 @@
 	action="/api/bookmarks/create/?"
 	bind:this={form}
 	use:enhance={() => {
-		bookmarks.push({
-		  title: value,
+		let newBookmark = new Bookmark({
+			title: value,
 		  value,
 		  partial: true,
 		});
+		
+		value = '';
+
+		bookmarks.addBookmark(newBookmark);
 
 		return async ({ result, update }) => {
-			bookmarks.pop();
-
 			if (result.type === 'failure' && typeof result.data?.message === 'string') {
 				error = result.data.message;
 			}
 
 			if (result.type === "success" && result.data?.bookmark) {
-        bookmarks.push(
-          result.data.bookmark as RawBookmark
+        bookmarks.bookmarks[0] = (
+					new Bookmark(
+						result.data.bookmark as RawBookmark
+					)
 				);
 			}
 			return await update();
@@ -121,8 +123,6 @@
 				margin: var(--space-2);
 
 				&:disabled {
-					background-color: var(--color-surface-dim);
-					color: var(--color-on-surface-variant);
 					right: -100%;
 					transition: right var(--transition-exit-screen-standard);
 				}
