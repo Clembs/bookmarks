@@ -3,7 +3,7 @@
 	import Dialog from '$lib/components/Dialog.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
 	import { screenSize } from '$lib/helpers/navigation.svelte';
-	import { GearSix, Plus } from 'phosphor-svelte';
+	import { Folder, FolderOpen, GearSix, Plus, SquaresFour } from 'phosphor-svelte';
 
 	let { isSidebarOpen = $bindable() } = $props();
 	let isCreationModalOpen = $state(false);
@@ -16,7 +16,8 @@
 
 <Dialog
 	bind:showModal={isCreationModalOpen}
-	headline="Create category"
+	headline="Create folder"
+	formAction="/api/categories/create?"
 	actions={[
 		{
 			label: 'Cancel',
@@ -30,9 +31,7 @@
 	]}
 	onclose={() => (isCreationModalOpen = false)}
 >
-	<form method="post" action="/api/category?">
-		<TextInput name="name" label="Name" required autofocus />
-	</form>
+	<TextInput name="name" label="Name" required autofocus />
 </Dialog>
 
 <div id="sidebar-wrapper" data-active={isSidebarOpen}>
@@ -40,13 +39,18 @@
 		<div id="title">saveit</div>
 
 		<ul id="top-items">
-			<a class="item" data-active={$page.url.pathname === '/app'} href="/app">All saves</a>
+			<a class="item" data-active={$page.url.pathname === '/app'} href="/app">
+				<SquaresFour weight={$page.url.pathname === '/app' ? 'fill' : 'regular'} size="20" />
+				All saves
+			</a>
 			{#each $page.data.categories as category (category.id)}
-				<a
-					class="item"
-					data-active={$page.url.pathname === `/app/${category.id}`}
-					href="/app/{category.id}"
-				>
+				{@const isActive = $page.url.pathname === `/app/${category.id}`}
+				<a class="item" data-active={isActive} href="/app/{category.id}">
+					{#if isActive}
+						<FolderOpen weight="fill" size="20" />
+					{:else}
+						<Folder size="20" />
+					{/if}
 					{category.name}
 				</a>
 			{/each}
@@ -147,7 +151,7 @@
 					background-color: var(--color-surface-container);
 				}
 
-				&[data-active] {
+				&[data-active='true'] {
 					background-color: var(--color-surface-container-highest);
 					color: var(--color-on-surface);
 					font-weight: 500;
