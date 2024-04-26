@@ -247,6 +247,8 @@
 					outline: none;
 					border-color: var(--color-primary);
 				}
+
+				@include focus-visible(0px);
 			}
 
 			&:has(.hint) &-title {
