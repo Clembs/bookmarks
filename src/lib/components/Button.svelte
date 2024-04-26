@@ -4,7 +4,7 @@
 		style = 'filled',
 		children,
 		type = 'button',
-		inline = true,
+		inline = false,
 		icon = false,
 		disabled = false,
 		onclick,
@@ -33,17 +33,19 @@
 {/if}
 
 <style lang="scss">
+	@import '../../styles/mixins.scss';
+
 	a,
 	button {
-		padding: var(--space-3) var(--space-5);
-		// height: var(--space-10);
+		padding: var(--space-3) var(--space-4);
 		border-radius: var(--round-md);
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		gap: var(--space-2);
-		transition: box-shadow var(--transition-in-out-standard), background-color var(--transition-in-out-standard), transform var(--transition-in-out-standard), scale var(--transition-in-out-standard);
+		transition: background-color var(--transition-in-out-standard), transform var(--transition-in-out-standard), scale var(--transition-in-out-standard);
 		user-select: none;
+		width: 100%;
 
 		&.inline {
 			width: fit-content;
@@ -56,10 +58,6 @@
 		&.filled {
 			background-color: var(--color-primary);
 			color: var(--color-on-primary);
-
-			&:hover, &:active, &:focus {
-				box-shadow: var(--elevation-1);
-			}
 
 			&:active {
 				opacity: 0.9;
@@ -97,6 +95,10 @@
 			background-color: var(--color-on-surface) / 0.12;
 			color: var(--color-on-surface) / 0.36;
 			// opacity: 0.12;
+		}
+
+		&:focus-visible {
+			@include focus-visible(2px);
 		}
 	}
 </style>
