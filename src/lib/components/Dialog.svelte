@@ -2,6 +2,7 @@
 	import type { ComponentType, Snippet } from 'svelte';
 	import Button from './Button.svelte';
 	import { enhance } from '$app/forms';
+	import type { SubmitFunction } from '@sveltejs/kit';
 
 	let {
 		el,
@@ -10,7 +11,8 @@
 		headline,
 		supportingText,
 		children,
-		formAction,
+		formActionUrl,
+		formActionCb,
 		actions,
 		onclose
 	}: {
@@ -20,7 +22,8 @@
 		headline?: string;
 		supportingText?: any;
 		children: Snippet;
-		formAction?: string;
+		formActionUrl?: string;
+		formActionCb?: SubmitFunction,
 		actions?: {
 			label: string;
 			action: 'submit' | 'close' | (() => void);
@@ -94,8 +97,11 @@
 {/snippet}
 
 <dialog bind:this={el} class="dialog" onclose={close}>
-	{#if formAction}
-		<form use:enhance method="post" action={formAction}>
+	{#if formActionUrl}
+		<form use:enhance={(data) => {
+			formActionCb?.(data);
+			close();
+		}} method="post" action={formActionUrl}>
 			{@render dialogContent()}
 		</form>
 	{:else}

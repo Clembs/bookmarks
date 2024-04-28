@@ -12,11 +12,6 @@
 	let isCreationModalOpen = $state(false);
 
 	function showContextMenu(ev: MouseEvent, category: RawCategory) {
-		if (contextMenu.state.state === 'open') {
-			contextMenu.close();
-			return;
-		}
-
 		contextMenu.open(ev, getCategoryContextMenuItems(category));
 	}
 
@@ -29,7 +24,7 @@
 <Dialog
 	bind:showModal={isCreationModalOpen}
 	headline="Create folder"
-	formAction="/api/categories/create?"
+	formActionUrl="/api/categories/create?"
 	actions={[
 		{
 			label: 'Cancel',
