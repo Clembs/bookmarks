@@ -30,13 +30,15 @@
 	}
 
 	function showContextMenu(ev: MouseEvent) {
-		if (contextMenu.state.state === 'open') {
-			contextMenu.close();
-			return;
-		}
-
 		contextMenu.open(ev, getBookmarkContextMenuItems(bookmark));
 	}
+	
+	const baseProps = $derived({
+		class: `bookmark ${active ? 'active' : ''}`,
+		['data-bookmark-id']: bookmark.raw.id,
+		oncontextmenu: showContextMenu,
+		...mouseEvents
+	});
 </script>
 
 <svelte:window
@@ -134,14 +136,7 @@
 {/snippet}
 
 {#if bookmark.raw.partial}
-	<button
-		class="bookmark"
-		class:keyboard={inputType.state === 'keyboard'}
-		class:active
-		data-bookmark-id={bookmark.raw.id}
-		oncontextmenu={showContextMenu}
-		{...mouseEvents}
-	>
+	<button {...baseProps}>
 		{@render bookmarkContent(bookmark)}
 	</button>
 {:else if urlTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
@@ -149,12 +144,7 @@
 		href={bookmark.raw.value}
 		target="_blank"
 		rel="noopener noreferrer"
-		class="bookmark"
-		class:keyboard={inputType.state === 'keyboard'}
-		class:active
-		data-bookmark-id={bookmark.raw.id}
-		oncontextmenu={showContextMenu}
-		{...mouseEvents}
+		{...baseProps}
 	>
 		<!-- use:clickoutside
 			on:clickoutside={submitRename} -->
@@ -165,26 +155,14 @@
 		onclick={() => {
 			bookmark.raw.value && navigator.clipboard.writeText(bookmark.raw.value);
 		}}
-		class="bookmark"
-		class:keyboard={inputType.state === 'keyboard'}
-		class:active
-		data-bookmark-id={bookmark.raw.id}
-		oncontextmenu={showContextMenu}
-		{...mouseEvents}
+		{...baseProps}
 	>
 		<!-- use:clickoutside
 		on:clickoutside={submitRename} -->
 		{@render bookmarkContent(bookmark)}
 	</button>
 {:else}
-	<button
-		class="bookmark"
-		class:keyboard={inputType.state === 'keyboard'}
-		class:active
-		data-bookmark-id={bookmark.raw.id}
-		oncontextmenu={showContextMenu}
-		{...mouseEvents}
-	>
+	<button {...baseProps}>
 		<!-- use:clickoutside
 		on:clickoutside={submitRename} -->
 		{@render bookmarkContent(bookmark)}
