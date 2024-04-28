@@ -7,6 +7,7 @@
 	import SidebarItem from './SidebarItem.svelte';
 	import type { RawCategory } from '$lib/types';
 	import { getCategoryContextMenuItems } from '$lib/helpers/context-menu/category';
+	import { handleKeyboardShortcut } from '$lib/helpers/keyboard/handler';
 
 	let { isSidebarOpen = $bindable() } = $props();
 	let isCreationModalOpen = $state(false);
@@ -20,6 +21,18 @@
 		isSidebarOpen = screenSize.width >= 1200;
 	});
 </script>
+
+<svelte:window
+	onkeydown={(ev) =>
+		handleKeyboardShortcut(ev, [
+			{
+				meta: true,
+				shift: true,
+				key: 'N',
+				action: () => (isCreationModalOpen = true)
+			}
+		])}
+/>
 
 <Dialog
 	bind:showModal={isCreationModalOpen}
