@@ -2,6 +2,7 @@ import type { ContextMenuAction, RawCategory } from '$lib/types';
 import { CheckCircle, PencilSimple, TrashSimple, XCircle } from 'phosphor-svelte';
 import toast from 'svelte-french-toast';
 import { dialog } from '../navigation.svelte';
+import { invalidate } from '$app/navigation';
 
 export function getCategoryContextMenuItems(category: RawCategory): ContextMenuAction[] {
 	return [
@@ -19,16 +20,11 @@ export function getCategoryContextMenuItems(category: RawCategory): ContextMenuA
 				dialog.open({
 					icon: TrashSimple,
 					headline: `Delete "${category.name}"?`,
-					formActionUrl: `/api/categories/${category.id}?/delete`,
-					formActionCb:
-						() =>
-						async ({ result, update }) => {
-							if (result.type === 'success') {
-								if (location.pathname.includes(category.id)) {
-									location.href = '/app';
-								}
-								console.log('hello');
-
+					formActionUrl: `/api/categories/${category.id}?/delete&current-cid=${location.pathname}`,
+					formActionCb: async () => {
+						return async ({ result, update }) => {
+							if (result.type === 'redirect' || result.type === 'success') {
+								await invalidate('categories');
 								toast.success('Category deleted.', {
 									icon: CheckCircle
 								});
@@ -37,8 +33,10 @@ export function getCategoryContextMenuItems(category: RawCategory): ContextMenuA
 									icon: XCircle
 								});
 							}
+
 							await update();
-						},
+						};
+					},
 					actions: [
 						{
 							label: 'Cancel',
