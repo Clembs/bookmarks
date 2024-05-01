@@ -37,9 +37,7 @@ export const actions = {
 		let newBookmark: RawBookmarkInsert;
 
 		if (YOUTUBE_VIDEO_REGEX.test(raw)) {
-			const videoId = raw.match(YOUTUBE_VIDEO_REGEX)![1];
-
-			newBookmark = await createYouTubeBookmark(videoId, session.userId, fetch);
+			newBookmark = await createYouTubeBookmark(raw, session.userId, fetch);
 		} else if (URL_REGEX.test(raw)) {
 			if (!raw.startsWith('http')) {
 				raw = `https://${raw}`;

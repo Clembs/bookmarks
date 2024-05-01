@@ -4,6 +4,7 @@ import type { RawBookmarkInsert } from '$lib/types';
 import type { RequestEvent } from '@sveltejs/kit';
 import { decode } from 'html-entities';
 import { fetchWebsiteInfo } from './fetchWebsiteInfo';
+import { YOUTUBE_VIDEO_REGEX } from '$lib/validation';
 
 export async function createUrlBookmark(
 	fullUrl: string,
@@ -22,10 +23,11 @@ export async function createUrlBookmark(
 }
 
 export async function createYouTubeBookmark(
-	videoId: string,
+	rawContent: string,
 	userId: string,
 	fetch: RequestEvent['fetch']
 ): Promise<RawBookmarkInsert> {
+	const videoId = rawContent.match(YOUTUBE_VIDEO_REGEX)![1];
 	const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
 	const videoDetailsReq = await fetch(
@@ -42,7 +44,7 @@ export async function createYouTubeBookmark(
 			.insert(bookmarks)
 			.values({
 				title: `Failed to fetch details for video ${videoId}`,
-				value: videoUrl,
+				value: rawContent,
 				type: 'url',
 				userId
 			})
