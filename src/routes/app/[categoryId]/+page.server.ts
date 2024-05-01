@@ -1,7 +1,7 @@
 import { db } from '$lib/db';
 import { error } from '@sveltejs/kit';
 
-export async function load({ parent, params, depends }) {
+export async function load({ parent, params, depends, setHeaders }) {
 	const { session, categories } = await parent();
 
 	const category = categories.find((c) => c.id === params.categoryId);
@@ -16,7 +16,11 @@ export async function load({ parent, params, depends }) {
 		orderBy: ({ createdAt }, { desc }) => desc(createdAt)
 	});
 
-	depends('bookmarks');
+	depends(`bookmarks:${category.id}`);
+
+	setHeaders({
+		'Cache-Control': 'public, max-age=3600'
+	});
 
 	return {
 		bookmarks,

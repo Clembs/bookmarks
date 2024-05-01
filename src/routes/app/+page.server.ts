@@ -1,6 +1,6 @@
 import { db } from '$lib/db';
 
-export async function load({ parent, depends }) {
+export async function load({ parent, depends, setHeaders }) {
 	const { session, categories } = await parent();
 
 	const bookmarks = await db.query.bookmarks.findMany({
@@ -9,7 +9,11 @@ export async function load({ parent, depends }) {
 		orderBy: ({ createdAt }, { desc }) => desc(createdAt)
 	});
 
-	depends('bookmarks');
+	depends('bookmarks:all');
+
+	setHeaders({
+		'Cache-Control': 'public, max-age=3600'
+	});
 
 	return {
 		bookmarks,
