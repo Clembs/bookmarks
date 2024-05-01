@@ -2,6 +2,7 @@ import type { RawBookmark } from '$lib/types';
 import toast from 'svelte-french-toast';
 import { trimText } from './text';
 import { CheckCircle } from 'phosphor-svelte';
+import { invalidate } from '$app/navigation';
 
 export const urlTypeBookmarks: Partial<RawBookmark['type']>[] = ['url', 'youtube'];
 export const copyTypeBookmarks: Partial<RawBookmark['type']>[] = ['text', 'color', 'contact'];
@@ -44,6 +45,8 @@ export class Bookmark {
 				const req = await fetch(`/api/bookmarks/${this.raw.id}`, {
 					method: 'DELETE'
 				});
+
+				await invalidate(`bookmarks:${this.raw.categoryId || 'all'}`);
 
 				return req.ok;
 			}
