@@ -21,16 +21,16 @@
 
 	function dragOver(ev: DragEvent) {
 		ev.preventDefault();
+		if (!ev.dataTransfer) return;
+
+		ev.dataTransfer.dropEffect = 'move';
 	}
 
 	function dragEnter(ev: DragEvent) {
 		ev.preventDefault();
 		if (!ev.dataTransfer) return;
-
-		const [type, categoryId, bookmarkId] = ev.dataTransfer.getData('text/plain').split('/');
-		if (!type || !bookmarkId || !bookmarkId) return;
-		if (type !== 'bm') return;
-		if (categoryId === category.id) return;
+		if ((ev.target as HTMLElement).attributes.getNamedItem('data-droppable')?.value !== 'true')
+			return;
 
 		isHovering = true;
 	}
@@ -46,13 +46,17 @@
 		ev.stopPropagation();
 		if (!ev.dataTransfer) return;
 
+		if ((ev.target as HTMLElement).attributes.getNamedItem('data-droppable')?.value !== 'true')
+			return;
+
 		const [type, categoryId, bookmarkId] = ev.dataTransfer.getData('text/plain').split('/');
+
 		if (!type || !bookmarkId || !bookmarkId) return;
-		if (type !== 'bm') return;
-		if (categoryId === category.id) return;
 
 		const bmElement = document.querySelector(`[data-bookmark-id="${bookmarkId}"]`);
 		bmElement?.remove();
+
+		(ev.target as HTMLElement).removeAttribute('data-droppable');
 
 		toast(`Moved to ${category.name}`);
 

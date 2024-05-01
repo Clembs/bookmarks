@@ -40,11 +40,16 @@
 
 	function dragStart(ev: DragEvent) {
 		if (!ev.dataTransfer) return;
-
-		ev.dataTransfer.clearData();
+		
 		ev.dataTransfer.effectAllowed = 'move';
 		ev.dataTransfer.setData('text/plain', `bm/${bookmark.raw.categoryId || ''}/${bookmark.raw.id}`);
+	
+		const sidebarItemDropZones: HTMLAnchorElement[] = Array.from(document.querySelectorAll('.sidebar-item.category'));
 
+		sidebarItemDropZones
+			.filter((el) => bookmark.raw?.categoryId ? !el.pathname.includes(bookmark.raw?.categoryId) : el.pathname !== '/app/')
+			.forEach((el) =>  el.setAttribute('data-droppable', 'true'));
+		
 		if (ev.target instanceof HTMLElement) {
 			ev.target.style.opacity = '0.5';
 		}
