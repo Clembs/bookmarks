@@ -3,7 +3,7 @@
 	import { type DialogOptions } from '$lib/components/Dialog.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
 	import { contextMenu, dialog, screenSize } from '$lib/helpers/navigation.svelte';
-	import { GearSix, Plus, SquaresFour } from 'phosphor-svelte';
+	import { GearSix, Plus } from 'phosphor-svelte';
 	import SidebarItem from './SidebarItem.svelte';
 	import type { RawCategory } from '$lib/types';
 	import { getCategoryContextMenuItems } from '$lib/helpers/context-menu/category';
@@ -40,7 +40,7 @@
 </script>
 
 {#snippet dialogContent()}
-	<TextInput maxlength={32} name="name" label="Name" required autofocus />
+	<TextInput tabindex={1} maxlength={32} name="name" label="Name" required autofocus />
 {/snippet}
 
 <svelte:window
@@ -60,9 +60,7 @@
 		<div id="title">saveit</div>
 
 		<ul id="top-items">
-			<SidebarItem href="/app" icon={SquaresFour} active={$page.url.pathname === '/app'}>
-				Unorganized
-			</SidebarItem>
+			<Category />
 			{#each $page.data.categories as RawCategory[] as category (category.id)}
 				<Category {category} oncontextmenu={(ev) => showContextMenu(ev, category)} />
 			{/each}

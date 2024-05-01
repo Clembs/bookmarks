@@ -4,7 +4,7 @@ import type { RawBookmark } from '$lib/types';
 import { copyTypeBookmarks } from '$lib/helpers/bookmark.svelte';
 import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import { string, object, optional, parse } from 'valibot';
+import { string, object, optional, parse, nullable } from 'valibot';
 
 export async function PATCH({ params, request, locals: { getSession } }) {
 	const session = await getSession();
@@ -16,7 +16,7 @@ export async function PATCH({ params, request, locals: { getSession } }) {
 		iconUrl: optional(string()),
 		value: optional(string()),
 		// TODO: regex the hell out of this
-		categoryId: optional(string())
+		categoryId: optional(nullable(string()))
 	});
 
 	const newData = parse(BookmarkEditSchema, body);

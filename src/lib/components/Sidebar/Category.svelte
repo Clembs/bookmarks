@@ -1,15 +1,19 @@
 <script lang="ts">
-	import { Folder, FolderOpen } from 'phosphor-svelte';
+	import { Folder, FolderOpen, SquaresFour } from 'phosphor-svelte';
 	import SidebarItem from './SidebarItem.svelte';
 	import { page } from '$app/stores';
 	import { invalidate } from '$app/navigation';
 	import type { RawCategory } from '$lib/types';
+	import toast from 'svelte-french-toast';
 
 	let {
-		category,
+		category = {
+			id: '',
+			name: 'Unorganized saves'
+		},
 		oncontextmenu
 	}: {
-		category: RawCategory;
+		category?: Pick<RawCategory, 'id' | 'name'>;
 		oncontextmenu?: (event: MouseEvent) => void;
 	} = $props();
 
@@ -55,7 +59,7 @@
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ categoryId: category.id })
+			body: JSON.stringify({ categoryId: category.id || null })
 		});
 
 		await invalidate(`bookmarks:${categoryId}`);
@@ -64,9 +68,9 @@
 
 <SidebarItem
 	class="category {isHovering ? 'hovering' : ''}"
-	icon={Folder}
-	iconActive={FolderOpen}
-	active={$page.url.pathname === `/app/${category.id}`}
+	icon={category.id ? Folder : SquaresFour}
+	{...category.id ? { iconActive: FolderOpen } : {}}
+	active={$page.url.pathname === (category.id ? `/app/${category.id}` : '/app')}
 	href={`/app/${category.id}`}
 	{oncontextmenu}
 	ondragenter={dragEnter}

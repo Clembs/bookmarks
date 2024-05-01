@@ -16,7 +16,7 @@ export type RawBookmark<TPartial = true | undefined> = TPartial extends undefine
 		};
 
 export type RawCategory = typeof categories.$inferSelect & {
-	bookmarks: RawBookmark[];
+	bookmarks?: RawBookmark[];
 };
 
 export type RawBookmarkInsert = typeof bookmarks.$inferInsert;
