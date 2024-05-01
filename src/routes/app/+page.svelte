@@ -7,6 +7,11 @@
 	let value = $state('');
 
 	let bookmarks = $state(data.bookmarks.map((bookmark) => new Bookmark(bookmark)));
+
+	$effect(() => {
+		data;
+		bookmarks = data.bookmarks.map((bookmark) => new Bookmark(bookmark));
+	});
 </script>
 
 <header>

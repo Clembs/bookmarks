@@ -46,21 +46,21 @@
 	use:enhance={() => {
 		let newBookmark = new Bookmark({
 			title: value,
-		  value,
-		  partial: true,
+			value,
+			partial: true
 		});
-		
+
 		value = '';
 
-		bookmarks.unshift(newBookmark);
+		bookmarks = [newBookmark, ...bookmarks];
 
 		return async ({ result, update }) => {
 			if (result.type === 'failure' && typeof result.data?.message === 'string') {
 				error = result.data.message;
 			}
 
-			if (result.type === "success" && result.data?.bookmark) {
-        bookmarks[0] = (
+			if (result.type === 'success' && result.data?.bookmark) {
+				bookmarks[0] = (
 					new Bookmark(
 						result.data.bookmark as RawBookmark
 					)
@@ -97,6 +97,7 @@
 	form {
 		#main-input-wrapper {
 			position: relative;
+			margin: var(--space-4) 0;
 
 			#input-hint {
 				position: absolute;
@@ -124,7 +125,6 @@
 			border: 1px solid var(--color-outline);
 			background-color: var(--color-surface);
 			border-radius: var(--round-full);
-			margin: var(--space-4) 0;
 			height: calc(var(--space-10) + var(--space-4));
 			overflow: hidden;
 			z-index: 3;
