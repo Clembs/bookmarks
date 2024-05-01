@@ -16,35 +16,45 @@ export const actions = {
 		const formConfirmPwd = data.get('confirm-password')?.toString();
 		const displayName = data.get('display-name')?.toString();
 
-		if (!formEmail)
-			return fail(400, {
-				message: 'Email is required'
-			});
+		const errors = {
+			email: '',
+			password: '',
+			confirmPassword: '',
+			displayName: ''
+		};
 
-		if (!formPwd)
-			return fail(400, {
-				message: 'Password is required'
-			});
+		if (!formEmail) errors.email = 'Email is required';
 
-		if (!displayName)
-			return fail(400, {
-				message: 'Display name is required'
-			});
+		if (!formPwd) errors.password = 'Password is required';
+
+		if (!displayName) errors.displayName = 'Display name is required';
+
+		if (!formEmail || !formPwd || !displayName) {
+			return fail(400, errors);
+		}
 
 		if (formPwd.length < 8 || formPwd.length > 64)
-			return fail(400, {
-				message: 'Password must be at least 8 characters and at most 64 characters'
-			});
+			errors.password = 'Password must be between 8 and 64 characters long';
 
-		if (!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,64}$/.test(formPwd))
-			return fail(400, {
-				message: 'Password must contain at least one letter, one number, and one special character'
-			});
+		if (
+			!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[<>@$!.,"'/\\-_+=()€¥%*#?&])[A-Za-z\d<>@$!.,"'/\\-_+=()€¥%*#?&]{8,64}$/.test(
+				formPwd
+			)
+		) {
+			if (errors.password) {
+				errors.password +=
+					' and must contain at least one letter, one number, and one special character';
+			} else {
+				errors.password =
+					'Password must contain at least one letter, one number, and one special character';
+			}
+		}
 
-		if (formPwd !== formConfirmPwd)
-			return fail(400, {
-				message: 'Passwords do not match'
-			});
+		if (formPwd !== formConfirmPwd) errors.confirmPassword = 'Passwords do not match';
+
+		if (Object.values(errors).some(Boolean)) {
+			return fail(400, errors);
+		}
 
 		const userData = await db.query.users.findFirst({
 			where: ({ email }, { eq }) => eq(email, formEmail)
@@ -52,7 +62,7 @@ export const actions = {
 
 		if (userData)
 			return fail(400, {
-				message: 'User already exists'
+				email: 'User already exists'
 			});
 
 		const [user] = await db

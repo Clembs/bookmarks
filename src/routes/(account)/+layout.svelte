@@ -10,10 +10,6 @@
 
 <style lang="scss">
 	#content {
-		display: grid;
-		place-items: center;
-		// flex-direction: column;
-		// align-items: center;
 		max-width: 400px;
 		margin: 0 auto;
 		height: 100%;

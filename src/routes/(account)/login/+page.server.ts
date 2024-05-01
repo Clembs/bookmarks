@@ -17,15 +17,16 @@ export const actions = {
 		const formEmail = data.get('email')?.toString();
 		const formPwd = data.get('password')?.toString();
 
-		if (!formEmail)
-			return fail(400, {
-				message: 'Email is required'
-			});
+		const errors = {
+			email: '',
+			password: ''
+		};
 
-		if (!formPwd)
-			return fail(400, {
-				message: 'Password is required'
-			});
+		if (!formEmail) errors.email = 'Email is required';
+
+		if (!formPwd) errors.password = 'Password is required';
+
+		if (!formEmail || !formPwd) return fail(400, errors);
 
 		const userData = await db.query.users.findFirst({
 			where: ({ email }, { eq }) => eq(email, formEmail)
@@ -33,14 +34,14 @@ export const actions = {
 
 		if (!userData)
 			return fail(400, {
-				message: 'Invalid email or password'
+				email: 'Invalid email or password'
 			});
 
 		const isCorrect = await bcrypt.compare(formPwd, userData.password);
 
 		if (!isCorrect)
 			return fail(400, {
-				message: 'Invalid email or password'
+				email: 'Invalid email or password'
 			});
 
 		const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
