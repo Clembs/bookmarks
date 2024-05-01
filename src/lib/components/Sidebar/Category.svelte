@@ -54,6 +54,8 @@
 		const bmElement = document.querySelector(`[data-bookmark-id="${bookmarkId}"]`);
 		bmElement?.remove();
 
+		toast(`Moved to ${category.name}`);
+
 		await fetch(`/api/bookmarks/${bookmarkId}`, {
 			method: 'PATCH',
 			headers: {

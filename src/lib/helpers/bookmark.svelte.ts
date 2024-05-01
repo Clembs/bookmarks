@@ -1,4 +1,7 @@
 import type { RawBookmark } from '$lib/types';
+import toast from 'svelte-french-toast';
+import { trimText } from './text';
+import { CheckCircle } from 'phosphor-svelte';
 
 export const urlTypeBookmarks: Partial<RawBookmark['type']>[] = ['url', 'youtube'];
 export const copyTypeBookmarks: Partial<RawBookmark['type']>[] = ['text', 'color', 'contact'];
@@ -32,6 +35,10 @@ export class Bookmark {
 		try {
 			const bmEl = document.querySelector(`[data-bookmark-id="${this.raw.id}"]`);
 			bmEl?.remove();
+
+			toast(`"${trimText(this.raw.title!)}" deleted`, {
+				icon: CheckCircle
+			});
 
 			if (this.raw.id) {
 				const req = await fetch(`/api/bookmarks/${this.raw.id}`, {

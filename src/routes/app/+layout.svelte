@@ -4,6 +4,7 @@
 	import Sidebar from '$lib/components/Sidebar/Sidebar.svelte';
 	import { contextMenu, dialog } from '$lib/helpers/navigation.svelte';
 	import ContextMenu from '$lib/components/ContextMenu.svelte';
+	import { Toaster } from 'svelte-french-toast';
 	import Dialog from '$lib/components/Dialog.svelte';
 
 	let { children, data } = $props();
@@ -22,6 +23,10 @@
 		}}
 	/>
 {/if}
+
+<Toaster position="bottom-right" toastOptions={{
+	className: 'toast'
+}} />
 
 {#if dialog.state.showModal}
 	<Dialog {...dialog.state} bind:showModal={dialog.state.showModal} />
