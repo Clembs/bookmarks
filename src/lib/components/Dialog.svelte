@@ -4,7 +4,7 @@
 		icon?: ComponentType;
 		headline?: string;
 		supportingText?: Snippet;
-		children: Snippet;
+		children?: Snippet;
 		formActionUrl?: string;
 		formActionCb?: SubmitFunction,
 		actions?: {
@@ -67,17 +67,20 @@
 			{@render supportingText()}
 		{/if}
 	
-		{@render children()}
+		{#if children}
+			{@render children()}
+		{/if}
 	</div>
 
 	{#if actions}
 		<div class="actions">
-			{#each actions as action}
+			{#each actions as action, i}
 				{#if typeof action.action !== 'string'}	
 					<Button
 						style={action.type || 'text'}
 						inline
 						onclick={() => typeof action.action === 'function' && action?.action()}
+						tabindex={i + 3}
 					>
 					{action.label}
 					</Button>
@@ -86,11 +89,12 @@
 						style={action.type || 'text'}
 						inline
 						onclick={close}
+						tabindex={i + 3}
 					>
 						{action.label}
 					</Button>
 				{:else if action.action === 'submit'}
-					<Button style={action.type || 'text'} inline type="submit">
+					<Button style={action.type || 'text'} inline type="submit" tabindex={2}>
 						{action.label}
 					</Button>
 				{/if}
@@ -114,7 +118,7 @@
 
 <style lang="scss">
 	.dialog {
-		padding: var(--space-4);
+		padding: 0;
 
 		min-width: 380px;
 		max-width: 560px;
@@ -129,7 +133,6 @@
 			text-align: center;
 		}
 
-
 		&::backdrop {
 			background: var(--neutral-0);
 			opacity: 0.32;
@@ -140,6 +143,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-4);
+		padding: var(--space-4);
 
 		.icon {
 			color: var(--color-secondary);
@@ -157,6 +161,8 @@
 		justify-content: flex-end;
 		width: 100%;
 		gap: var(--space-2);
-		margin-top: var(--space-4);
+		margin-top: calc(0 - var(--space-2));
+		padding: var(--space-2) var(--space-4);
+		background-color: var(--color-surface-container);
 	}
 </style>
