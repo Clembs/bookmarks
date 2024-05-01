@@ -29,7 +29,9 @@
 	onkeydown={(ev) => {
 		if (contextMenu.state.state === 'open') return;
 
-		if (inputType.state === "keyboard" && currentBookmark) {
+		const isInputFocused = document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA';
+
+		if (inputType.state === "keyboard" && currentBookmark && !isInputFocused) {
 			handleKeyboardShortcut(ev, getBookmarkKbdActions(currentBookmark));
 		}
 
@@ -99,17 +101,17 @@
 		}
 	}
 
-	#add-to-saves {
-		display: flex;
-		border-radius: var(--round-md);
-		padding: var(--space-2);
-		display: flex;
-		gap: var(--space-2);
-		width: 100%;
-		transition: background-color var(--transition-in-out-standard);
+	// #add-to-saves {
+	// 	display: flex;
+	// 	border-radius: var(--round-md);
+	// 	padding: var(--space-2);
+	// 	display: flex;
+	// 	gap: var(--space-2);
+	// 	width: 100%;
+	// 	transition: background-color var(--transition-in-out-standard);
 
-		&:hover {
-			background-color: var(--color-surface-container);
-		}
-	}
+	// 	&:hover {
+	// 		background-color: var(--color-surface-container);
+	// 	}
+	// }
 </style>
