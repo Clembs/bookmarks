@@ -77,15 +77,13 @@
 					{action.label}
 					</Button>
 				{:else if action.action === 'close'}
-					<form method="dialog">
-						<Button
-							style={action.type || 'text'}
-							inline
-							type="submit"
-						>
-							{action.label}
-						</Button>
-					</form>
+					<Button
+						style={action.type || 'text'}
+						inline
+						onclick={close}
+					>
+						{action.label}
+					</Button>
 				{:else if action.action === 'submit'}
 					<Button style={action.type || 'text'} inline type="submit">
 						{action.label}
