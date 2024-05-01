@@ -1,9 +1,10 @@
 import { urlTypeBookmarks, type Bookmark } from '$lib/helpers/bookmark.svelte';
 import type { ContextMenuAction } from '$lib/types';
 import { ArrowSquareOut, Copy, PencilSimple, TrashSimple } from 'phosphor-svelte';
+import Color from 'color-string';
 
 export function getBookmarkContextMenuItems(bookmark: Bookmark): ContextMenuAction[] {
-	const items = [];
+	const items: ContextMenuAction[] = [];
 
 	if (bookmark.raw.value && urlTypeBookmarks.includes(bookmark.raw.type)) {
 		items.push({
@@ -29,6 +30,28 @@ export function getBookmarkContextMenuItems(bookmark: Bookmark): ContextMenuActi
 			icon: Copy,
 			shortcut: 'Ctrl+C'
 		});
+	}
+
+	if (bookmark.raw.type === 'color') {
+		const color = Color.get(bookmark.raw.value!)!;
+
+		items.push(
+			{
+				label: 'Copy HEX',
+				action: () => navigator.clipboard.writeText(Color.to.hex(color.value)),
+				icon: Copy
+			},
+			{
+				label: 'Copy RGB',
+				action: () => navigator.clipboard.writeText(Color.to.rgb(color.value)),
+				icon: Copy
+			},
+			{
+				label: 'Copy HSL',
+				action: () => navigator.clipboard.writeText(Color.to.hsl(color.value)),
+				icon: Copy
+			}
+		);
 	}
 
 	return [

@@ -1,13 +1,10 @@
 import { error, fail } from '@sveltejs/kit';
 import type { RawBookmarkInsert } from '$lib/types';
 import { URL_REGEX, YOUTUBE_VIDEO_REGEX } from '$lib/validation';
-import {
-	createTextBookmark,
-	createUrlBookmark,
-	createYouTubeBookmark
-} from '$lib/helpers/create-bookmark';
+import { createUrlBookmark, createYouTubeBookmark } from '$lib/helpers/create-bookmark';
 import { db } from '$lib/db';
 import { bookmarks } from '$lib/db/schema';
+import Color from 'color-string';
 
 export const actions = {
 	async default({ request, fetch, locals }) {
@@ -44,9 +41,20 @@ export const actions = {
 			}
 
 			newBookmark = await createUrlBookmark(raw, session.userId, fetch);
+		} else if (Color.get(raw)) {
+			newBookmark = {
+				title: raw,
+				value: raw,
+				type: 'color',
+				userId: session.userId
+			};
 		} else {
-			console.log('Creating text bookmark');
-			newBookmark = await createTextBookmark(raw, session.userId);
+			newBookmark = {
+				title: raw,
+				value: raw,
+				type: 'text',
+				userId: session.userId
+			};
 		}
 
 		try {

@@ -72,12 +72,3 @@ export async function createYouTubeBookmark(
 		}
 	};
 }
-
-export async function createTextBookmark(raw: string, userId: string): Promise<RawBookmarkInsert> {
-	return {
-		title: raw,
-		value: raw,
-		type: 'text',
-		userId
-	};
-}

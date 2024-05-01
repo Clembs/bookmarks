@@ -49,8 +49,8 @@
 		sidebarItemDropZones
 			.filter((el) => bookmark.raw?.categoryId ? !el.pathname.includes(bookmark.raw?.categoryId) : el.pathname !== '/app/')
 			.forEach((el) =>  el.setAttribute('data-droppable', 'true'));
-		
-		if (ev.target instanceof HTMLElement) {
+
+			if (ev.target instanceof HTMLElement) {
 			ev.target.style.opacity = '0.5';
 		}
 	}
@@ -105,6 +105,12 @@
 			{:else if bookmark.raw.type === 'url'}
 				<div class="bookmark-icon">
 					<Globe size="24" />
+				</div>
+			{:else if bookmark.raw.type === 'color'}
+				<div
+					class="bookmark-icon rounded"
+					style="background-color: {bookmark.raw.value}"
+				>
 				</div>
 			{:else}
 				<div class="bookmark-icon">
@@ -224,6 +230,10 @@
 			min-height: 24px;
 			display: grid;
 			place-items: center;
+
+			&.rounded {
+				border-radius: var(--round-full);
+			}
 		}
 
 		&-info {
