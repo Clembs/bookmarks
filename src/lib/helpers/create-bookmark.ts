@@ -1,5 +1,3 @@
-import { db } from '$lib/db';
-import { bookmarks } from '$lib/db/schema';
 import type { RawBookmarkInsert } from '$lib/types';
 import type { RequestEvent } from '@sveltejs/kit';
 import { decode } from 'html-entities';
@@ -40,17 +38,12 @@ export async function createYouTubeBookmark(
 	);
 
 	if (!videoDetailsReq.ok) {
-		const [newBookmark] = await db
-			.insert(bookmarks)
-			.values({
-				title: `Failed to fetch details for video ${videoId}`,
-				value: rawContent,
-				type: 'url',
-				userId
-			})
-			.returning();
-
-		return newBookmark;
+		return {
+			title: `Failed to fetch details for video ${videoId}`,
+			value: rawContent,
+			type: 'url',
+			userId
+		};
 	}
 
 	const videoDetails: {
