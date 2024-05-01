@@ -3,11 +3,12 @@
 	import Dialog from '$lib/components/Dialog.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
 	import { contextMenu, screenSize } from '$lib/helpers/navigation.svelte';
-	import { Folder, FolderOpen, GearSix, Plus, SquaresFour } from 'phosphor-svelte';
+	import { GearSix, Plus, SquaresFour } from 'phosphor-svelte';
 	import SidebarItem from './SidebarItem.svelte';
 	import type { RawCategory } from '$lib/types';
 	import { getCategoryContextMenuItems } from '$lib/helpers/context-menu/category';
 	import { handleKeyboardShortcut } from '$lib/helpers/keyboard/handler';
+	import Category from './Category.svelte';
 
 	let { isSidebarOpen = $bindable() } = $props();
 	let isCreationModalOpen = $state(false);
@@ -62,16 +63,8 @@
 			<SidebarItem href="/app" icon={SquaresFour} active={$page.url.pathname === '/app'}>
 				Unorganized
 			</SidebarItem>
-			{#each $page.data.categories as category (category.id)}
-				<SidebarItem
-					href="/app/{category.id}"
-					icon={Folder}
-					iconActive={FolderOpen}
-					active={$page.url.pathname === `/app/${category.id}`}
-					oncontextmenu={(ev) => showContextMenu(ev, category)}
-				>
-					{category.name}
-				</SidebarItem>
+			{#each $page.data.categories as RawCategory[] as category (category.id)}
+				<Category {category} oncontextmenu={(ev) => showContextMenu(ev, category)} />
 			{/each}
 			<SidebarItem icon={Plus} onclick={() => (isCreationModalOpen = true)}>
 				Create folder

@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { type Bookmark, urlTypeBookmarks, copyTypeBookmarks } from '$lib/helpers/bookmark.svelte';
+	import {
+		type Bookmark,
+		urlTypeBookmarks, copyTypeBookmarks
+	} from '$lib/helpers/bookmark.svelte';
 	import { trimUrl } from '$lib/helpers/trimUrl';
 	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
 	import { YOUTUBE_VIDEO_REGEX } from '$lib/validation';
@@ -32,11 +35,27 @@
 	function showContextMenu(ev: MouseEvent) {
 		contextMenu.open(ev, getBookmarkContextMenuItems(bookmark));
 	}
-	
-	const baseProps = $derived({
+
+	function dragStart(ev: DragEvent) {
+		if (!ev.dataTransfer) return;
+
+		ev.dataTransfer.clearData();
+		ev.dataTransfer.effectAllowed = 'move';
+		ev.dataTransfer.setData('text/plain', `bm/${bookmark.raw.categoryId || ''}/${bookmark.raw.id}`);
+
+		if (ev.target instanceof HTMLElement) {
+			ev.target.style.opacity = '0.5';
+		}
+	}
+
+	function dragEnd(ev: DragEvent) {
+		if (ev.target instanceof HTMLElement) {
+			ev.target.style.opacity = '';
+		}
+	}
+
+	let baseProps = $derived({
 		class: `bookmark ${active ? 'active' : ''}`,
-		['data-bookmark-id']: bookmark.raw.id,
-		oncontextmenu: showContextMenu,
 		...mouseEvents
 	});
 </script>
@@ -113,13 +132,11 @@
 						</div>
 					{:else}
 						<div class="bookmark-info-subtext hint">
-							<!-- {#if active} -->
 							{#if inputType.state === 'keyboard'}
 								Enter to copy
 							{:else}
 								Click to copy
 							{/if}
-							<!-- {/if} -->
 						</div>
 					{/if}
 				{/if}
@@ -135,39 +152,41 @@
 	{/if}
 {/snippet}
 
-{#if bookmark.raw.partial}
-	<button {...baseProps}>
-		{@render bookmarkContent(bookmark)}
-	</button>
-{:else if urlTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
-	<a
-		href={bookmark.raw.value}
-		target="_blank"
-		rel="noopener noreferrer"
-		{...baseProps}
-	>
-		<!-- use:clickoutside
-			on:clickoutside={submitRename} -->
+<li
+	data-bookmark-id={bookmark.raw.id}
+	oncontextmenu={showContextMenu}
+	draggable={!bookmark.raw.partial}
+	ondragstart={dragStart}
+	ondragend={dragEnd}
+>
+	{#if bookmark.raw.partial}
+		<button {...baseProps}>
 			{@render bookmarkContent(bookmark)}
-	</a>
-{:else if copyTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
-	<button
-		onclick={() => {
-			bookmark.raw.value && navigator.clipboard.writeText(bookmark.raw.value);
-		}}
-		{...baseProps}
-	>
-		<!-- use:clickoutside
-		on:clickoutside={submitRename} -->
-		{@render bookmarkContent(bookmark)}
-	</button>
-{:else}
-	<button {...baseProps}>
-		<!-- use:clickoutside
-		on:clickoutside={submitRename} -->
-		{@render bookmarkContent(bookmark)}
-	</button>
-{/if}
+		</button>
+	{:else if urlTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
+		<a
+			href={bookmark.raw.value}
+			target="_blank"
+			rel="noopener noreferrer"
+			{...baseProps}
+		>
+			{@render bookmarkContent(bookmark)}
+		</a>
+	{:else if copyTypeBookmarks.includes(bookmark.raw.type) && !bookmark.isRenaming}
+		<button
+			onclick={() => {
+				bookmark.raw.value && navigator.clipboard.writeText(bookmark.raw.value);
+			}}
+			{...baseProps}
+		>
+			{@render bookmarkContent(bookmark)}
+		</button>
+	{:else}
+		<button {...baseProps}>
+			{@render bookmarkContent(bookmark)}
+		</button>
+	{/if}
+</li>
 
 <style lang="scss">
 	@import '../../styles/mixins.scss';

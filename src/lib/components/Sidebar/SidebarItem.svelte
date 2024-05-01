@@ -8,49 +8,66 @@
     onclick,
     icon,
     iconActive,
-    children
+    children,
+    class: className,
+    ...mouseEvents
   }: {
     active?: boolean;
     href?: string;
     oncontextmenu?: (event: MouseEvent) => void;
     onclick?: (event: Event) => void;
-    icon: ComponentType,
-    iconActive?: ComponentType,
-    children: Snippet
+    icon: ComponentType;
+    iconActive?: ComponentType;
+    children: Snippet;
+    class?: string;
+    ondragenter?: (event: DragEvent) => void;
+    ondragover?: (event: DragEvent) => void;
+    ondragleave?: (event: DragEvent) => void;
+    ondrop?: (event: DragEvent) => void;
   } = $props();
 
   let iconProps = $derived({
     size: 20,
     weight: active ? 'fill' : 'regular'
   });
+
+  let baseProps = $derived({
+    class: `sidebar-item ${className}`,
+    oncontextmenu,
+    'data-active': active,
+    ...mouseEvents
+  });
+
 </script>
 
-{#if href}
-  <a {href} {oncontextmenu} class="item" data-active={active}>
-    {#if icon}
+<li>
+  {#if href}
+    <a {href} {...baseProps}>
+      {#if icon}
       {#if active && iconActive}
-        <svelte:component this={iconActive} {...iconProps} />
+      <svelte:component this={iconActive} {...iconProps} />
       {:else}
-        <svelte:component this={icon} {...iconProps} />
+      <svelte:component this={icon} {...iconProps} />
       {/if}
       {/if}
       {@render children()}
-  </a>
+    </a>
   {:else}
-    <button {onclick} {oncontextmenu} class="item" data-active={active}>
+    <button {onclick} {...baseProps}>
       {#if icon}
-        {#if active && iconActive}
-          <svelte:component this={iconActive} {...iconProps} />
-        {:else}
-          <svelte:component this={icon} {...iconProps} />
+      {#if active && iconActive}
+      <svelte:component this={iconActive} {...iconProps} />
+      {:else}
+      <svelte:component this={icon} {...iconProps} />
+          {/if}
         {/if}
-      {/if}
-    {@render children()}
-  </button>
-{/if}
+      {@render children()}
+    </button>
+  {/if}
+</li>
 
 <style lang="scss">
-  .item {
+  .sidebar-item {
     display: flex;
     align-items: center;
     width: 100%;
@@ -63,6 +80,7 @@
     border-radius: var(--round-md);
     color: var(--color-on-surface-variant);
     text-decoration: none;
+    border: 2px solid transparent;
 
     &:hover {
       background-color: var(--color-surface-container);
