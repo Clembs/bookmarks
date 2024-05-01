@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from "svelte/elements";
+
 	let {
 		href = '',
 		style = 'filled',
@@ -8,7 +10,8 @@
 		icon = false,
 		disabled = false,
 		onclick,
-		onsubmit
+		onsubmit,
+		...restProps
 	}: {
 		href?: string;
 		style?: 'filled' | 'filled-tonal' | 'outline' | 'text';
@@ -19,15 +22,15 @@
 		disabled?: boolean;
 		onclick?: (event: MouseEvent) => void;
 		onsubmit?: (event: Event) => void;
-	} = $props();
+	} & HTMLAnchorAttributes & HTMLButtonAttributes = $props();
 </script>
 
 {#if href && !disabled}
-	<a {href} {onsubmit} {onclick} class={style} class:inline class:icon>
+	<a {href} {onsubmit} {onclick} class={style} class:inline class:icon {...restProps}>
 		{@render children()}
 	</a>
 {:else}
-	<button {onsubmit} {onclick} {type} {disabled} class={style} class:inline class:icon>
+	<button {onsubmit} {onclick} {type} {disabled} class={style} class:inline class:icon {...restProps}>
 		{@render children()}
 	</button>
 {/if}

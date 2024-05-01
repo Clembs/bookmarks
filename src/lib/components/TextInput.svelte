@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
+
 	let {
 		el = $bindable(),
 		type = 'text',
@@ -15,7 +17,7 @@
 		height = '200px',
 		autofocus = false,
 		error = '',
-		...everythingElse
+		...restProps
 	}: {
 		el?: HTMLInputElement | HTMLTextAreaElement;
 		type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url';
@@ -32,7 +34,8 @@
 		height?: string;
 		autofocus?: boolean;
 		error?: string;
-	} = $props();
+	} & HTMLInputAttributes &
+		HTMLTextareaAttributes = $props();
 </script>
 
 <label for={name}>
@@ -40,14 +43,14 @@
 		{label}
 	</span>
 	{#if multiline}
+		<!-- on:input
+	on:focus
+	on:blur
+	on:keydown -->
 		<textarea
 			style:--height={height}
 			bind:this={el}
 			bind:value
-			on:input
-			on:focus
-			on:blur
-			on:keydown
 			{minlength}
 			{maxlength}
 			{placeholder}
@@ -57,17 +60,13 @@
 			{name}
 			{autofocus}
 			id={name}
-			{...everythingElse}
-		/>
+			{...restProps}
+		></textarea>
 	{:else}
 		<input
 			{...{ type }}
 			bind:this={el}
 			bind:value
-			on:input
-			on:focus
-			on:blur
-			on:keydown
 			{minlength}
 			{maxlength}
 			{placeholder}
@@ -77,7 +76,7 @@
 			{name}
 			{autofocus}
 			id={name}
-			{...everythingElse}
+			{...restProps}
 		/>
 	{/if}
 	{#if error}
@@ -104,26 +103,13 @@
 			font-size: 1rem;
 			border-radius: var(--round-md);
 			border: none;
-			outline: 2px solid var(--color-surface-container-highest);
+			outline: 2px solid var(--color-on-surface-variant);
 			background-color: inherit;
 			color: var(--color-on-surface);
 			font-family: var(--fonts-body);
 
 			&:focus {
 				outline: 2px solid var(--color-primary);
-
-				& + label {
-					color: var(--color-primary);
-				}
-			}
-
-			&:focus,
-			&:not(:placeholder-shown) {
-				& + label {
-					top: 0;
-					transform: translateY(-50%) translateX(-0.25rem);
-					font-size: 0.75rem;
-				}
 			}
 		}
 
