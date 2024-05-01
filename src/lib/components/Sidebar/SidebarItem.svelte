@@ -26,6 +26,8 @@
     ondrop?: (event: DragEvent) => void;
   } = $props();
 
+  let hovering = $state(false);
+
   let iconProps = $derived({
     size: 20,
     weight: active ? 'fill' : 'regular'
@@ -34,6 +36,10 @@
   let baseProps = $derived({
     class: `sidebar-item ${className}`,
     oncontextmenu,
+    onmouseenter: () => hovering = true,
+    onmouseleave: () => hovering = false,
+    onfocus: () => hovering = true,
+    onblur: () => hovering = false,
     'data-active': active,
     ...mouseEvents
   });
@@ -44,23 +50,15 @@
   {#if href}
     <a {href} {...baseProps}>
       {#if icon}
-      {#if active && iconActive}
-      <svelte:component this={iconActive} {...iconProps} />
-      {:else}
-      <svelte:component this={icon} {...iconProps} />
-      {/if}
-      {/if}
-      {@render children()}
+        <svelte:component this={active || hovering ? (iconActive || icon) : icon} {...iconProps} />
+        {/if}
+        {@render children()}
     </a>
-  {:else}
+    {:else}
     <button {onclick} {...baseProps}>
       {#if icon}
-      {#if active && iconActive}
-      <svelte:component this={iconActive} {...iconProps} />
-      {:else}
-      <svelte:component this={icon} {...iconProps} />
-          {/if}
-        {/if}
+        <svelte:component this={active || hovering ? (iconActive || icon) : icon} {...iconProps} />
+      {/if}
       {@render children()}
     </button>
   {/if}
