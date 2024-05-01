@@ -1,18 +1,25 @@
 import { urlTypeBookmarks, type Bookmark } from '$lib/helpers/bookmark.svelte';
 import type { ContextMenuAction } from '$lib/types';
-import { ArrowSquareOut, Copy, PencilSimple, TrashSimple } from 'phosphor-svelte';
+import { ArrowSquareOut, ArrowsClockwise, Copy, PencilSimple, TrashSimple } from 'phosphor-svelte';
 import Color from 'color-string';
 
 export function getBookmarkContextMenuItems(bookmark: Bookmark): ContextMenuAction[] {
 	const items: ContextMenuAction[] = [];
 
 	if (bookmark.raw.value && urlTypeBookmarks.includes(bookmark.raw.type)) {
-		items.push({
-			label: 'Open URL',
-			action: bookmark.raw.value!,
-			icon: ArrowSquareOut,
-			shortcut: 'Enter'
-		});
+		items.push(
+			{
+				label: 'Open URL',
+				action: bookmark.raw.value!,
+				icon: ArrowSquareOut,
+				shortcut: 'Enter'
+			},
+			{
+				label: 'Refresh Metadata',
+				action: () => bookmark.refresh(),
+				icon: ArrowsClockwise
+			}
+		);
 	}
 
 	if (bookmark.raw.type === 'youtube' && bookmark.raw.metadata) {

@@ -1,7 +1,7 @@
 import type { RawBookmark } from '$lib/types';
 import toast from 'svelte-french-toast';
 import { trimText } from './text';
-import { CheckCircle } from 'phosphor-svelte';
+import { CheckCircle, XCircle } from 'phosphor-svelte';
 import { invalidate } from '$app/navigation';
 
 export const urlTypeBookmarks: Partial<RawBookmark['type']>[] = ['url', 'youtube'];
@@ -24,6 +24,8 @@ export class Bookmark {
 					title: newTitle
 				})
 			});
+
+			await invalidate(`bookmarks:${this.raw.categoryId || 'all'}`);
 
 			return req.ok;
 		} catch (error) {
@@ -52,6 +54,32 @@ export class Bookmark {
 			}
 		} catch (error) {
 			return false;
+		}
+	}
+
+	async refresh() {
+		this.setLoading(true);
+
+		try {
+			const req = await fetch(`/api/bookmarks/${this.raw.id}/refresh`, {
+				method: 'PATCH'
+			});
+
+			const data = await req.json();
+
+			this.raw = data;
+
+			await invalidate(`bookmarks:${this.raw.categoryId || 'all'}`);
+
+			toast.success(`Refreshed metadata for "${trimText(this.raw.title!)}"`, {
+				icon: CheckCircle
+			});
+
+			this.setLoading(false);
+		} catch (error) {
+			toast.error('Failed to refresh save information', {
+				icon: XCircle
+			});
 		}
 	}
 
