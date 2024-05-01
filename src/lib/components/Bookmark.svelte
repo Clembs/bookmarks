@@ -19,6 +19,8 @@
 		active?: boolean;
 		onmouseenter?: (ev: MouseEvent) => void;
 		onmouseleave?: (ev: MouseEvent) => void;
+		onfocus?: (ev: FocusEvent) => void;
+		onblur?: (ev: FocusEvent) => void;
 	} = $props();
 
 	let textFieldEl = $state<HTMLInputElement>();

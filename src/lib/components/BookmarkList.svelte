@@ -54,7 +54,9 @@
 				
 				const bmEl = listEl?.children[newIndex] as HTMLElement;
 				const bmElRect = bmEl?.getBoundingClientRect();
-				bmEl.focus();
+
+				const interactiveEl = bmEl.children[0] as HTMLElement;
+				interactiveEl.focus();
 
 				const inputFormEl = document.querySelector("#add-bookmark") as HTMLElement;
 				const inputRect = inputFormEl.getBoundingClientRect();
@@ -85,6 +87,8 @@
 			{bookmark}
 			onmouseenter={useMouse(() => (currentBookmark = bookmark))}
 			onmouseleave={useMouse(() => (currentBookmark = undefined))}
+			onfocus={() => (currentBookmark = bookmark)}
+			onblur={() => (currentBookmark = undefined)}
 		/>
 	{/each}
 </ul>
