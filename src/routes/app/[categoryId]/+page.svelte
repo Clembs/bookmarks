@@ -1,26 +1,30 @@
 <script lang="ts">
 	import BookmarkList from '$lib/components/BookmarkList.svelte';
-	import { bookmarks } from '$lib/helpers/bookmark.svelte';
+	import { Bookmark } from '$lib/helpers/bookmark.svelte';
 	import BookmarkInput from '../BookmarkInput.svelte';
 
 	const { data } = $props();
 
 	let value = $state('');
 
+	let bookmarks = $state(data.bookmarks.map((bookmark) => new Bookmark(bookmark)));
+
 	$effect(() => {
-		bookmarks.setBookmarks(data.bookmarks);
-	});
+		bookmarks = data.bookmarks.map((bookmark) => new Bookmark(bookmark));
+	})
 </script>
 
 <header>
 	<h1>{data.category.name}</h1>
 
-	<BookmarkInput bind:value categoryId={data.category.id} />
+	<BookmarkInput bind:bookmarks bind:value categoryId={data.category.id} />
 </header>
 
-<BookmarkList
-	bookmarks={value.length >= 2 ? bookmarks.bookmarks.filter((bm) => bm.raw.title?.toLowerCase()?.includes(value.toLowerCase())!) : bookmarks.bookmarks}
-/>
+{#key bookmarks}
+	<BookmarkList
+		bookmarks={value.length >= 2 ? bookmarks.filter((bm) => bm.raw.title?.toLowerCase()?.includes(value.toLowerCase())!) : bookmarks}
+	/>
+{/key}
 
 <style lang="scss">
 	@import '../../../styles/vars.scss';

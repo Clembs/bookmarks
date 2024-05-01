@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { RawBookmark } from '$lib/types';
-	import { Bookmark, bookmarks } from '$lib/helpers/bookmark.svelte';
+	import { Bookmark } from '$lib/helpers/bookmark.svelte';
 	import { Plus } from 'phosphor-svelte';
 
 	let error = $state('');
@@ -9,9 +9,11 @@
 	let form = $state<HTMLFormElement | undefined>();
 
 	let {
+		bookmarks = $bindable(),
 		value = $bindable(''),
 		categoryId
 	}: {
+		bookmarks: Bookmark[];
 		value: string;
 		categoryId?: string;
 	} = $props();
@@ -50,7 +52,7 @@
 		
 		value = '';
 
-		bookmarks.addBookmark(newBookmark);
+		bookmarks.unshift(newBookmark);
 
 		return async ({ result, update }) => {
 			if (result.type === 'failure' && typeof result.data?.message === 'string') {
@@ -58,7 +60,7 @@
 			}
 
 			if (result.type === "success" && result.data?.bookmark) {
-        bookmarks.bookmarks[0] = (
+        bookmarks[0] = (
 					new Bookmark(
 						result.data.bookmark as RawBookmark
 					)
@@ -68,19 +70,24 @@
 		};
 	}}
 >
-	<div class="main-input">
-		<input
-			bind:this={textInput}
-			bind:value
-			type="text"
-			name="raw"
-			placeholder="Search a save or add to your saves"
-		/>
-		<input type="hidden" name="category-id" value={categoryId || ''} />
+	<div id="main-input-wrapper">
+		<div id="main-input">
+			<input
+				bind:this={textInput}
+				bind:value
+				type="text"
+				name="raw"
+				placeholder="Search a save or add to your saves"
+			/>
+			<input type="hidden" name="category-id" value={categoryId || ''} />
 
-		<button disabled={!value} type="submit">
-			<Plus />
-		</button>
+			<button disabled={!value} type="submit">
+				<Plus weight="bold" />
+			</button>
+		</div>
+		<div id="input-hint" class:hidden={value.length < 2}>
+			Searching saves. Press Enter or click + to add to saves.
+		</div>
 	</div>
 </form>
 
@@ -88,7 +95,30 @@
 	@import '../../styles/vars.scss';
 
 	form {
-		.main-input {
+		#main-input-wrapper {
+			position: relative;
+
+			#input-hint {
+				position: absolute;
+				top: 100%;
+				left: var(--space-4);
+				width: 100%;
+				font-size: 0.7rem;
+				opacity: 1;
+				filter: blur(0px);
+				transition:
+					transform var(--transition-in-out-standard),
+					opacity var(--transition-in-out-standard);
+
+				&.hidden {
+					transform: translateY(-100%);
+					opacity: 0.75;
+					filter: blur(1px);
+				}
+			}
+		}
+
+		#main-input {
 			position: relative;
 			display: flex;
 			border: 1px solid var(--color-outline);
@@ -97,6 +127,7 @@
 			margin: var(--space-4) 0;
 			height: calc(var(--space-10) + var(--space-4));
 			overflow: hidden;
+			z-index: 3;
 
 			input {
 				flex: 1;
@@ -116,7 +147,7 @@
 				top: 0;
 				// transform: translateY(-50%);
 				right: 0px;
-				transition: right var(--transition-enter-screen-standard);
+				transition: right var(--transition-in-out-emphasized);
 
 				width: var(--space-10);
 				height: var(--space-10);
@@ -128,7 +159,6 @@
 
 				&:disabled {
 					right: -100%;
-					transition: right var(--transition-exit-screen-standard);
 				}
 			}
 		}
@@ -143,7 +173,7 @@
 			padding: var(--space-2);
 			border-radius: var(--round-xlg) var(--round-xlg) 0 0;
 
-			.main-input {
+			#main-input {
 				margin: 0;
 			}
 		}

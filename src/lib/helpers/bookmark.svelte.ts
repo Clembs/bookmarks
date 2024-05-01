@@ -30,16 +30,15 @@ export class Bookmark {
 
 	async delete() {
 		try {
-			if (this.raw.id) {
-				bookmarks.removeBookmark(this.raw.id);
+			const bmEl = document.querySelector(`[data-bookmark-id="${this.raw.id}"]`);
+			bmEl?.remove();
 
+			if (this.raw.id) {
 				const req = await fetch(`/api/bookmarks/${this.raw.id}`, {
 					method: 'DELETE'
 				});
 
 				return req.ok;
-			} else {
-				bookmarks.bookmarks.shift();
 			}
 		} catch (error) {
 			return false;
@@ -56,27 +55,3 @@ export class Bookmark {
 	}
 	setLoading = (newState: boolean) => (this.bmIsLoading = newState);
 }
-
-function createBookmarks() {
-	let bms = $state<Bookmark[]>([]);
-
-	return {
-		get bookmarks() {
-			return bms;
-		},
-		addBookmark(newBookmark: RawBookmark | Bookmark) {
-			bms = [newBookmark instanceof Bookmark ? newBookmark : new Bookmark(newBookmark), ...bms];
-		},
-		setBookmarks(newBookmarks: (RawBookmark | Bookmark)[]) {
-			bms =
-				newBookmarks[0] instanceof Bookmark
-					? (newBookmarks as Bookmark[])
-					: newBookmarks.map((bm) => new Bookmark(bm as RawBookmark));
-		},
-		removeBookmark(id: string) {
-			bms = bms.filter((bm) => bm.raw.id !== id);
-		}
-	};
-}
-
-export const bookmarks = createBookmarks();
