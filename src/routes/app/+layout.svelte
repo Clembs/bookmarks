@@ -2,8 +2,9 @@
 	import Button from '$lib/components/Button.svelte';
 	import { List, TextOutdent } from 'phosphor-svelte';
 	import Sidebar from '$lib/components/Sidebar/Sidebar.svelte';
-	import { contextMenu } from '$lib/helpers/navigation.svelte';
+	import { contextMenu, dialog } from '$lib/helpers/navigation.svelte';
 	import ContextMenu from '$lib/components/ContextMenu.svelte';
+	import Dialog from '$lib/components/Dialog.svelte';
 
 	let { children, data } = $props();
 
@@ -22,6 +23,9 @@
 	/>
 {/if}
 
+{#if dialog.state.showModal}
+	<Dialog {...dialog.state} bind:showModal={dialog.state.showModal} />
+{/if}
 
 <div id="layout">
 	<Sidebar bind:isSidebarOpen />

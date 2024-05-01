@@ -1,5 +1,7 @@
 import { browser } from '$app/environment';
+import type { DialogOptions } from '$lib/components/Dialog.svelte';
 import type { ContextMenuAction } from '$lib/types';
+import type { Snippet } from 'svelte';
 
 export type InputType = 'mouse' | 'keyboard';
 
@@ -100,6 +102,31 @@ function createContextMenuState() {
 	};
 }
 
+function createDialogState() {
+	let state = $state<DialogOptions>({
+		showModal: false,
+		children: null as unknown as Snippet
+	});
+
+	return {
+		get state() {
+			return state;
+		},
+		open(options: DialogOptions) {
+			state = {
+				showModal: true,
+				...options
+			};
+		},
+		close() {
+			state.showModal = false;
+		}
+	};
+}
+
 export const inputType = createInputState();
 export const screenSize = createScreenSizeState();
 export const contextMenu = createContextMenuState();
+export const dialog = createDialogState();
+
+$inspect(dialog);

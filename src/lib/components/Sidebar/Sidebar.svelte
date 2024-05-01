@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Dialog from '$lib/components/Dialog.svelte';
+	import { type DialogOptions } from '$lib/components/Dialog.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
-	import { contextMenu, screenSize } from '$lib/helpers/navigation.svelte';
+	import { contextMenu, dialog, screenSize } from '$lib/helpers/navigation.svelte';
 	import { GearSix, Plus, SquaresFour } from 'phosphor-svelte';
 	import SidebarItem from './SidebarItem.svelte';
 	import type { RawCategory } from '$lib/types';
@@ -11,7 +11,23 @@
 	import Category from './Category.svelte';
 
 	let { isSidebarOpen = $bindable() } = $props();
-	let isCreationModalOpen = $state(false);
+
+	const dialogOpts = {
+		headline: 'Create folder',
+		formActionUrl: '/api/categories/create?',
+		actions: [
+			{
+				label: 'Cancel',
+				action: 'close'
+			},
+			{
+				label: 'Create',
+				action: 'submit',
+				type: 'filled'
+			}
+		],
+		children: dialogContent
+	} satisfies DialogOptions;
 
 	function showContextMenu(ev: MouseEvent, category: RawCategory) {
 		contextMenu.open(ev, getCategoryContextMenuItems(category));
@@ -23,6 +39,10 @@
 	});
 </script>
 
+{#snippet dialogContent()}
+	<TextInput maxlength={32} name="name" label="Name" required autofocus />
+{/snippet}
+
 <svelte:window
 	onkeydown={(ev) =>
 		handleKeyboardShortcut(ev, [
@@ -30,30 +50,10 @@
 				meta: true,
 				shift: true,
 				key: 'N',
-				action: () => (isCreationModalOpen = true)
+				action: () => dialog.open(dialogOpts)
 			}
 		])}
 />
-
-<Dialog
-	bind:showModal={isCreationModalOpen}
-	headline="Create folder"
-	formActionUrl="/api/categories/create?"
-	actions={[
-		{
-			label: 'Cancel',
-			action: 'close'
-		},
-		{
-			label: 'Create',
-			action: 'submit',
-			type: 'filled'
-		}
-	]}
-	onclose={() => (isCreationModalOpen = false)}
->
-	<TextInput maxlength={32} name="name" label="Name" required autofocus />
-</Dialog>
 
 <div id="sidebar-wrapper" data-active={isSidebarOpen}>
 	<aside>
@@ -66,9 +66,7 @@
 			{#each $page.data.categories as RawCategory[] as category (category.id)}
 				<Category {category} oncontextmenu={(ev) => showContextMenu(ev, category)} />
 			{/each}
-			<SidebarItem icon={Plus} onclick={() => (isCreationModalOpen = true)}>
-				Create folder
-			</SidebarItem>
+			<SidebarItem icon={Plus} onclick={() => dialog.open(dialogOpts)}>Create folder</SidebarItem>
 		</ul>
 
 		<ul id="bottom-items">

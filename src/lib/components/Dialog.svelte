@@ -1,3 +1,20 @@
+<script lang="ts" context="module">
+	export type DialogOptions = {
+		showModal?: boolean;
+		icon?: ComponentType;
+		headline?: string;
+		supportingText?: Snippet;
+		children: Snippet;
+		formActionUrl?: string;
+		formActionCb?: SubmitFunction,
+		actions?: {
+			label: string;
+			action: (() => void | Promise<void>) | 'submit' | 'close';
+			type?: 'filled' | 'text';
+		}[];
+	};
+</script>
+
 <script lang="ts">
 	import type { ComponentType, Snippet } from 'svelte';
 	import Button from './Button.svelte';
@@ -17,20 +34,8 @@
 		onclose
 	}: {
 		el?: HTMLDialogElement;
-		showModal?: boolean;
-		icon?: ComponentType;
-		headline?: string;
-		supportingText?: any;
-		children: Snippet;
-		formActionUrl?: string;
-		formActionCb?: SubmitFunction,
-		actions?: {
-			label: string;
-			action: 'submit' | 'close' | (() => void);
-			type?: 'filled' | 'text';
-		}[];
 		onclose?: () => void;
-	} = $props();
+	} & DialogOptions = $props();
 
 	function close() {
 		el?.close();
