@@ -6,7 +6,8 @@ export async function load({ locals: { getSession }, request, depends }) {
 	if (!session) throw redirect(302, '/login');
 
 	const categories = await db.query.categories.findMany({
-		where: ({ userId }, { eq }) => eq(userId, session.userId)
+		where: ({ userId }, { eq }) => eq(userId, session.userId),
+		orderBy: ({ createdAt }, { asc }) => asc(createdAt)
 	});
 
 	depends('categories');
