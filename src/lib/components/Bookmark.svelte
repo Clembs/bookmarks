@@ -109,7 +109,7 @@
 			{:else if bookmark.raw.type === 'color'}
 				<div
 					class="bookmark-icon rounded"
-					style="background-color: {bookmark.raw.value}"
+					style="background-color: {newTitle}"
 				>
 				</div>
 			{:else}
@@ -279,9 +279,9 @@
 				font-size: 0.75rem;
 				color: var(--color-on-surface-variant);
 
-				a:hover {
-					text-decoration: underline;
-				}
+				// a:hover {
+				// 	text-decoration: underline;
+				// }
 
 				&.hint {
 					opacity: 0;
