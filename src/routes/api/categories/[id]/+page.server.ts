@@ -16,9 +16,9 @@ export const actions = {
 
 		await db.delete(categories).where(eq(categories.id, category.id));
 
-		const currentCategoryId = url.searchParams.get('current-cid');
+		const requestLocation = url.searchParams.get('location');
 
-		if (currentCategoryId === category.id) {
+		if (requestLocation?.includes(category.id)) {
 			return redirect(303, `/app`);
 		}
 
