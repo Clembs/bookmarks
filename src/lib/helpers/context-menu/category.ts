@@ -1,5 +1,7 @@
 import type { ContextMenuAction, RawCategory } from '$lib/types';
-import { PencilSimple, TrashSimple } from 'phosphor-svelte';
+import { CheckCircle, PencilSimple, TrashSimple, XCircle } from 'phosphor-svelte';
+import toast from 'svelte-french-toast';
+import { dialog } from '../navigation.svelte';
 
 export function getCategoryContextMenuItems(category: RawCategory): ContextMenuAction[] {
 	return [
@@ -8,16 +10,50 @@ export function getCategoryContextMenuItems(category: RawCategory): ContextMenuA
 			action() {
 				null;
 			},
-			icon: PencilSimple,
-			shortcut: 'F2'
+			icon: PencilSimple
+			// shortcut: 'F2'
 		},
 		{
 			label: 'Delete',
-			action() {
-				null;
+			async action() {
+				dialog.open({
+					icon: TrashSimple,
+					headline: `Delete "${category.name}"?`,
+					formActionUrl: `/api/categories/${category.id}?/delete`,
+					formActionCb:
+						() =>
+						async ({ result, update }) => {
+							if (result.type === 'success') {
+								if (location.pathname.includes(category.id)) {
+									location.href = '/app';
+								}
+								console.log('hello');
+
+								toast.success('Category deleted.', {
+									icon: CheckCircle
+								});
+							} else {
+								toast.error('Failed to delete category.', {
+									icon: XCircle
+								});
+							}
+							await update();
+						},
+					actions: [
+						{
+							label: 'Cancel',
+							action: 'close'
+						},
+						{
+							label: 'Delete category',
+							action: 'submit',
+							type: 'filled'
+						}
+					]
+				});
 			},
-			icon: TrashSimple,
-			shortcut: 'Del'
+			icon: TrashSimple
+			// shortcut: 'Del'
 		}
 	];
 }

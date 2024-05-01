@@ -67,7 +67,7 @@ export const bookmarks = pgTable('bookmarks', {
 	userId: text('user_id')
 		.notNull()
 		.references(() => users.id),
-	categoryId: text('category_id').references(() => categories.id),
+	categoryId: text('category_id').references(() => categories.id, { onDelete: 'cascade' }),
 	type: text('type', {
 		enum: ['file', 'url', 'text', 'color', 'image', 'youtube', 'code', 'contact', 'event']
 	}).notNull(),
