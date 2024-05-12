@@ -74,7 +74,7 @@
     text-wrap: nowrap;
     white-space: nowrap;
     gap: var(--space-3);
-    padding: var(--space-3) var(--space-4);
+    padding: var(--space-2);
     border-radius: var(--round-md);
     color: var(--color-on-surface-variant);
     text-decoration: none;
