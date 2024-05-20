@@ -6,7 +6,7 @@
 	import { trimUrl } from '$lib/helpers/trimUrl';
 	import IndeterminateProgressSpinner from './IndeterminateProgressSpinner.svelte';
 	import { YOUTUBE_VIDEO_REGEX } from '$lib/validation';
-	import { Globe, TextAlignLeft } from 'phosphor-svelte';
+	import { Globe, Note } from 'phosphor-svelte';
 	import { contextMenu, inputType } from '$lib/helpers/navigation.svelte';
 	import { getBookmarkContextMenuItems } from '$lib/helpers/context-menu/bookmarks';
 
@@ -114,7 +114,7 @@
 				</div>
 			{:else}
 				<div class="bookmark-icon">
-					<TextAlignLeft size="24" />
+					<Note size="24" />
 				</div>
 			{/if}
 
